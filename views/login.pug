@@ -1,20 +1,19 @@
 html
   head
-    style 
+    style
       include styles.css
-
-title My Website
-
-main
-  h1.form-title.container.title LOGIN
-
-body.form-background
-  form.form-container(method="POST")
-    .input
-      label(for="Username") Username
-      input#uname(type="text", name="uname")
-    .input
-      label(for="Password") Password
-      input#pword(type="password", name="pword")
-    .input
-      input#submit(type="submit", value="Submit")    
+  title My Website
+  main
+    h1.form-title.container.title LOGIN
+  body.form-background
+    form.form-container(method="POST")
+      .input
+        label(for="Username") Username
+        input#uname(type="text", name="uname")
+      .input
+        label(for="Password") Password
+        input#pword(type="password", name="pword")
+      .input
+        input#submit(type="submit", value="Submit")
+    <script src="getJSONData.js"></script>
+    <script src="putJSONData.js"></script>

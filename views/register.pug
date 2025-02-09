@@ -2,22 +2,19 @@ html
   head
     style 
       include styles.css
-
-title REGISTER
-
-main
-  h1.title.container.form-title Create Your Account
-
-body.form-background
-  form.form-container(method="POST") 
-    .input
-      label.label(for="Username") Username
-      input#uname(type="text", name="uname")
-    .input
-      label.label(for="Password") Password
-      input#pword(type="password", name="pword")
-    .input
-      label.label(for="email") Email
-      input#email(type="email", name="email")
-    .input
-      input#submit(type="submit", value="Submit")   
+  title REGISTER
+  main
+    h1.title.container.form-title Create Your Account
+  body.form-background
+    form.form-container(method="POST")
+      .input
+        label.label(for="Username") Username
+        input#uname(type="text", name="uname")
+      .input
+        label.label(for="Password") Password
+        input#pword(type="password", name="pword")
+      .input
+        label.label(for="email") Email
+        input#email(type="email", name="email")
+      .input
+        input#submit(type="submit", value="Submit")
