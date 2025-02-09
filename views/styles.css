@@ -1,0 +1,328 @@
+@font-face {
+    font-family: ShadowsIntoLight;
+    src: url(/fonts/Shadows_Into_Light/ShadowsIntoLight-Regular.ttf);
+}
+
+
+html, body{
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    min-width: 800px;
+
+}
+
+.title{
+   text-align: center;
+   font-size: 12vh;
+   margin-top: 20em;
+   font-weight: bolder;
+}
+
+.main-title{
+    color: rgb(0, 0, 0);
+    font-family: ShadowsIntoLight;
+    
+}
+
+.background{
+    background-image: url(/imgs/hills.gif);
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100%;
+    min-width: 100%;
+}
+
+.container{
+    margin: 0 auto;
+    padding: 0 1.5em;
+}
+
+nav{
+  padding: 15px 15px 15px 15px;
+  text-decoration: none;
+}
+
+
+.main-nav {
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: darker;   
+
+}
+
+.main-nav li{
+    display: inline;
+    background-color:rgb(25, 148, 76);
+    border-style: solid;
+    width: 30%;
+    border-radius: 30em;
+    max-width: 250px;
+    text-decoration: none;
+
+}
+
+.main-nav a{
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-family: monospace;
+    font-size: 30px;
+    text-decoration: none;
+}
+
+.main-nav li:first-child{
+    margin-right: 8%;
+}
+
+.main-nav li:hover{
+    background-color: rgba(136, 136, 136, 0.7);
+}
+
+.main-nav ul{
+    display: flex;
+    max-height: 97vh;
+    height: 50vh;
+    align-items:flex-end;
+    justify-content: center;
+    text-decoration: none;
+}
+
+input[type=text], input[type=password], input[type=email]{
+    padding: 12px 20px;
+    width: 30%;
+    margin: 8px 1% 8px 1%;
+    box-sizing: border-box;
+    border-radius: 6px;
+    display:flex;
+    flex-wrap: wrap;
+    align-items:center;
+    justify-content: center;
+    transition: width .1s ease-in-out;
+  }
+
+  input:hover{
+    background-color: rgba(255, 255, 255, 0.9);
+    width: 50%;
+  }
+
+  input:focus{
+    background-color: rgba(255, 255, 255, 0.9);
+    width: 50%;
+  }
+
+  .input{
+    margin: 80px 10% 80px 10%;
+
+  }
+
+  label{
+    font-size: 30px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: rgb(255, 255, 255);
+  }
+
+  .form-title{
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 90px;
+    color: rgb(255, 255, 255);
+  }
+
+  .form-background{
+    background-image: url(/imgs/chalkboard.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100%;
+    min-width: 100%;
+  }
+
+  input[type=submit]{
+    background-color: #969696;
+    border: none;
+    color: rgb(0, 0, 0);
+    padding: 16px 32px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+
+  .home-nav{
+    color: rgb(255, 255, 255);
+    font-family:monospace;
+    font-size: 45px;
+    text-decoration: none;
+    text-shadow: 3px 3px 15px rgb(255, 0, 0);
+  }
+
+  .home-nav li{
+    padding-top: 1em;
+    text-decoration: none;
+    list-style-type: none;
+  }
+
+  .home-nav a{
+    text-decoration: none;
+    all:unset;
+  }
+
+  .home-nav a:hover{
+    cursor: pointer;
+    font-size: 55px;
+    font-weight: bolder;
+  }
+
+  .home-background{
+    background-image: url(imgs/moon.gif);
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100%;
+    min-width: 100%;
+  }
+
+.home-title{
+  color: rgb(190, 91, 91);
+  font-family: ShadowsIntoLight;
+  text-shadow: 7px 7px rgb(0, 0, 0);
+}
+
+.game-body{
+  background-color: rgb(139, 139, 139);
+  background-size: cover;
+  min-height: 100%;
+  min-width: 100%;
+  transition: ease-in-out;
+}
+
+.game-nav {
+  margin-top: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+}
+
+.game-nav ul {
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+  text-decoration: none;
+}
+
+.game-nav li {
+  display: inline;
+  text-decoration: none;
+  text-align: center;
+  padding: 5em;
+}
+
+.game-nav li:first-child {
+  padding: 0;
+}
+
+.game-nav img{
+  width: 300px;
+  cursor: pointer;
+  border-color: black;
+  border-width: 20px;
+  border-radius: 50em;
+}
+
+.game-nav img:hover{
+  width: 310px;
+}
+
+.game-exit{
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: rgb(255, 255, 255);
+  font-family: monospace;
+  font-size: 30px;
+  text-decoration: none;
+}
+
+.game-exit:hover{
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.adventure-exit{
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: rgb(255, 0, 0);
+  font-family: monospace;
+  font-size: 30px;
+  text-decoration: none;
+}
+
+@keyframes colorChange {
+  0% { color: red; }
+  25% {color: purple;}
+  50% { color: blue; }
+  75% {color: yellow;}
+  100% { color: green; }
+}
+
+.color-change {
+  animation: colorChange 3s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.pulse {
+  animation: pulse 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+.bounce {
+  animation: bounce 1s infinite;
+}
+
+.TGE-background{
+  background-image: url(imgs/ge3.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100%;
+  min-width: 100%;
+  color: white;
+}
+
+.TheEnchantedForest-background{
+  background-image: url(imgs/forest.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100%;
+  min-width: 100%;
+  color:white;
+}
+
+.TheManor-background{
+  background-image: url(imgs/manor.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100%;
+  min-width: 100%;
+  color: black;
+}
+
+.adeventure-title{
+  text-align: center;
+  font-size: 30px;
+  margin-top: 20em;
+  color: rgb(255, 255, 255);
+}
+
+#map,
+#pano {
+  float: left;
+  height: 100%;
+  width: 50%;
+}

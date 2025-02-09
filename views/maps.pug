@@ -1,0 +1,17 @@
+html
+  head
+    title Google Maps Integration
+    link(rel="stylesheet" href="/styles.css")
+    // You don’t need a "style" tag if you're already including your external styles
+    // include styles.css 
+
+  body
+    h1 Google Maps with Street View
+    #map(style="height: 400px; width: 100%;")
+    #pano(style="height: 400px; width: 100%; margin-top: 10px;")
+
+    // Load your external JavaScript file
+    script(src="/maps.js")
+
+    // Load Google Maps API with your API key
+    script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPvTGyXoYAzHY03xzDjP0tXq5KIcvHHKo&callback=initialize&v=weekly" defer)

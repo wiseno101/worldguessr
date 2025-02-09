@@ -1,0 +1,15 @@
+html
+  head
+    style 
+      include styles.css
+      
+title 
+
+main
+body.TGE-background
+  h1.adventure-title.container= story.story_name
+    p= story.scenario
+    form(action="/TheGalacticEnigma", method="POST")
+        each choice in story.choices
+            button(type="submit", name="choice", value=choice)= `Go to Page ${choice}`
+    a.adventure-exit(href="/home") Back to Home
