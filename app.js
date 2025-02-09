@@ -22,10 +22,22 @@ app.use(express.static('public'));
 app.use((req, res, next) => {
     res.setHeader(
         "Content-Security-Policy",
-        "script-src 'self' https://maps.googleapis.com https://cdn.jsdelivr.net;"
+        "default-src 'self'; " +
+        "script-src 'self' https://maps.googleapis.com https://cdn.jsdelivr.net; " +
+        "script-src-elem 'self' https://maps.googleapis.com https://cdn.jsdelivr.net; " +
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +  // Allow stylesheets from Google Fonts
+        "img-src 'self' data: https://maps.gstatic.com https://maps.googleapis.com https://streetviewpixels-pa.googleapis.com/; " +  
+        "font-src 'self' https://fonts.gstatic.com https://maps.googleapis.com; " +  // Allow font files from Google Fonts
+        "connect-src 'self' https://api.jsonbin.io https://maps.googleapis.com;"
     );
     next();
 });
+
+
+
+
+
+  
 
 
 app.listen(1234, async ()=> {
@@ -88,7 +100,7 @@ app.get('/maps', function(req, res){
         res.redirect('/login');
     }
     else {
-        console.log("Accessing home page");
+        console.log("Accessing maps");
         res.render('maps');
     }
     

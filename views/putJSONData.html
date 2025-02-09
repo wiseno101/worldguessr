@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Submit JSON Data to JSONBin</title>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Google Font -->
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+  
+  <style>
+	  /* Style for the Put JSON button */
+	  #putJsonButton {
+		background-color: #007BFF; /* Blue background */
+		color: white; /* White text */
+		border: none; /* Remove border */
+		padding: 10px 20px; /* Add padding */
+		font-size: 16px; /* Adjust font size */
+		font-family: 'Roboto', sans-serif; /* Use Roboto Thin */
+		font-weight: 300; /* Thin font weight */
+		border-radius: 5px; /* Rounded corners */
+		cursor: pointer; /* Change cursor to pointer on hover */
+		transition: background-color 0.3s; /* Smooth transition for hover effect */
+	  }
+	  
+  </style>
+</head>
+<body>
+  <h1>Submit New Data to JSONBin</h1>
+  <form id="jsonForm">
+	<label for="firstName">First Name:</label>
+	<input type="text" id="firstName" name="firstName" required><br>
+
+	<label for="lastName">Last Name:</label>
+	<input type="text" id="lastName" name="lastName" required><br>
+
+	<label for="address">Address:</label>
+	<input type="text" id="address" name="address" required><br>
+
+	<label for="city">City:</label>
+	<input type="text" id="city" name="city" required><br>
+
+	<label for="state">State:</label>
+	<input type="text" id="state" name="state" required><br>
+
+	<label for="zip">Zip:</label>
+	<input type="text" id="zip" name="zip" required><br>
+
+	<label for="email">Email:</label>
+	<input type="email" id="email" name="email" required><br>
+
+	<label for="phone">Phone:</label>
+	<input type="text" id="phone" name="phone" required><br><br>
+
+	<button type="button" id="putJsonButton" onclick="submitData()">Submit</button>
+
+  </form>
+
+  <div id="response"></div>
+
+  <script src="getJSONData.js"></script>
+  <script src="putJSONData.js"></script>
+  <script>
+	async function submitData() {
+	  try {
+		// Get the new data from the form
+		const newData = {
+		  "FirstName": document.getElementById('firstName').value,
+		  "LastName": document.getElementById('lastName').value,
+		  "Address": document.getElementById('address').value,
+		  "City": document.getElementById('city').value,
+		  "State": document.getElementById('state').value,
+		  "Zip": document.getElementById('zip').value,
+		  "Email": document.getElementById('email').value,
+		  "Phone": document.getElementById('phone').value,
+		};
+
+		// Fetch the existing data from JSONBin
+		const existingData = JSON.parse(await getJSONData());
+
+		// Ensure existingData is an array
+		if (!Array.isArray(existingData)) {
+		  throw new Error("Fetched data is not an array");
+		}
+
+		// Append the new data to the existing data
+		existingData.push(newData);
+
+		// Update JSONBin with the modified data
+		await putJSONData(existingData);
+
+		// Display success message
+		document.getElementById('response').textContent = 'Data submitted successfully!';
+	  } catch (error) {
+		console.error('Error:', error);
+		document.getElementById('response').textContent = 'Error: ' + error.message;
+	  }
+	}
+  </script>
+</body>
+</html>
