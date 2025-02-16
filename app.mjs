@@ -1,7 +1,6 @@
 import express from 'express';
 import http from 'http';  // Import 'http' module
 import qString from 'querystring';  // Import 'querystring' module
-import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import crypto from 'crypto';
