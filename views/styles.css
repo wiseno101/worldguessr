@@ -135,6 +135,9 @@ input[type=text], input[type=password], input[type=email]{
     background-size: cover;
     min-height: 100%;
     min-width: 100%;
+    font-size: 30px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: rgb(224, 26, 26);
   }
 
   input[type=submit]{
@@ -286,33 +289,6 @@ input[type=text], input[type=password], input[type=email]{
   animation: bounce 1s infinite;
 }
 
-.TGE-background{
-  background-image: url(imgs/ge3.jpg);
-  background-repeat: no-repeat;
-  background-size: cover;
-  min-height: 100%;
-  min-width: 100%;
-  color: white;
-}
-
-.TheEnchantedForest-background{
-  background-image: url(imgs/forest.jpg);
-  background-repeat: no-repeat;
-  background-size: cover;
-  min-height: 100%;
-  min-width: 100%;
-  color:white;
-}
-
-.TheManor-background{
-  background-image: url(imgs/manor.jpg);
-  background-repeat: no-repeat;
-  background-size: cover;
-  min-height: 100%;
-  min-width: 100%;
-  color: black;
-}
-
 .adeventure-title{
   text-align: center;
   font-size: 30px;
@@ -320,9 +296,58 @@ input[type=text], input[type=password], input[type=email]{
   color: rgb(255, 255, 255);
 }
 
-#map,
+
 #pano {
   float: left;
   height: 100%;
   width: 50%;
+}
+#map {
+  height: 100vh;
+  width: 100%;
+}
+
+#mapModal {
+  position: fixed;
+  bottom: 10px; /* Adjust this value to change the distance from the bottom */
+  right: 10px; /* Adjust this value to change the distance from the right */
+  width: 25%; /* You can adjust the width to your liking */
+  height: 25%; /* You can adjust the height to your liking */
+  background-color: rgba(255, 255, 255, 0.9); /* Light background for the modal */
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: none; /* Keep it hidden by default */
+}
+
+.modal-content {
+  background-color: white;
+  color: black;
+  padding: 20px;
+  border: 1px solid #888;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+.close {
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+button {
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: darkgreen;
 }

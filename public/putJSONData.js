@@ -1,5 +1,5 @@
 const putJSONData = async (updatedData) => {
-  const binId = '67a8ce85ad19ca34f8fcfee6'; 
+  const binId = '67bde89dad19ca34f811c459'; 
   const apiKey = '$2a$10$UWl/UsMmB.v6jw7Y1I9zquaKE5OWGPLGu5QBweYdyhZudOt.AJezS'; 
   const url = "https://api.jsonbin.io/v3/b/" + binId;
 

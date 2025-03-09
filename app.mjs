@@ -8,7 +8,8 @@ import crypto from 'crypto';
 const app = express();
 
 // JSONbin API Details
-const binId = '67a9064facd3cb34a8dbaf8d';  // Replace with your JSONbin ID
+const binId = '67bde89dad19ca34f811c459';  // Replace with your JSONbin ID
+const gameBinId = '67ce01a8e41b4d34e4a390f4'; 
 const apiKey = '$2a$10$UWl/UsMmB.v6jw7Y1I9zquaKE5OWGPLGu5QBweYdyhZudOt.AJezS';  // Replace with your JSONbin API key
 
 app.set('views', './views');
@@ -18,15 +19,17 @@ app.use((req, res, next) => {
     res.setHeader(
         "Content-Security-Policy",
         "default-src 'self'; " +
-        "script-src 'self' https://maps.googleapis.com https://cdn.jsdelivr.net; " +
-        "script-src-elem 'self' https://maps.googleapis.com https://cdn.jsdelivr.net; " +
+        "script-src 'self' https://maps.googleapis.com https://cdn.jsdelivr.net; " +  // Allow Google Maps API and WebfontLoader script
+        "script-src-elem 'self' https://maps.googleapis.com https://cdn.jsdelivr.net; " +  // Allow external script elements (for WebfontLoader)
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +  // Allow stylesheets from Google Fonts
         "img-src 'self' data: https://maps.gstatic.com https://maps.googleapis.com https://streetviewpixels-pa.googleapis.com/; " +  
-        "font-src 'self' https://fonts.gstatic.com https://maps.googleapis.com; " +  // Allow font files from Google Fonts
-        "connect-src 'self' https://api.jsonbin.io https://maps.googleapis.com;"
+        "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; " +  // Allow fonts from Google Fonts and CDN
+        "connect-src 'self' https://api.jsonbin.io https://maps.googleapis.com; "  // Allow connections to JSONbin and Google Maps API
     );
     next();
 });
+
+
 
 app.listen(1234, async () => {
     console.log("Server is running...");
@@ -90,6 +93,34 @@ const putJSONData = async (updatedData) => {
     return await response.json();
 };
 
+//fetch game data from json bin
+const getGamedata = async () => {
+    const url = `https://api.jsonbin.io/v3/b/${gameBinId}?meta=false`;
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'X-Master-Key': apiKey,
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (response.status !== 200) {
+        throw new Error("Cannot fetch data");
+    }
+
+    const data = await response.json();
+
+    // Log the fetched data to inspect its structure
+    console.log('Fetched Data:', data);
+
+    // Ensure that the 'users' field exists in the response
+    if (!data.games) {
+        throw new Error('No users data found');
+    }
+
+    return data;  // Directly return the data without expecting a 'record' field
+};
 // Middleware to parse the body
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -134,6 +165,26 @@ app.get('/maps', (req, res) => {
         console.log("Accessing maps");
         res.render('maps');
     }
+});
+//games loading, with data from jsonbin
+app.get('/games', async (req, res) => {
+    if (!req.session.user) {
+        console.log('Unable to access');
+        res.redirect('/login');
+    } else {
+        console.log("Accessing maps");
+        try {
+            const data = await getGamedata(); // Fetch game data
+            if (data && data.games) {
+                res.render('games', { games: data.games }); // Pass the games array to the Pug template
+            } else {
+                res.status(500).send('Games data is unavailable');
+            }
+        } catch (err) {
+            console.error('Error fetching games:', err);
+            res.status(500).send('Internal Server Error');
+        }
+    };
 });
 
 app.post('/register', express.urlencoded({ extended: false }), async (req, res) => {
@@ -200,3 +251,8 @@ app.use('*', (req, res) => {
 app.use((err, req, res, next) => {
     res.status(500).render('error', { message: err.message });
 });
+
+
+//game logic vars
+
+let global_round = 0;

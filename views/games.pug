@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+html
+  head
+    style 
+      include styles.css
+    title Game Selection
+  body.container.home-background
+    nav.home-nav
+      ul
+        li 
+          a(href="/maps") maps
+        li 
+          a(href="/home") home
+    main
+      h1 Games List
+      nav.home-nav
+        ul(id="games-list")
+          each game in games
+            li= game._id + ': ' + game.description
+    script(src="games.js")
