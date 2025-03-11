@@ -375,7 +375,7 @@ app.post('/login', express.urlencoded({ extended: false }), async (req, res) => 
             res.redirect('/home');
         } else { //redirect back to login with incorrect password msg
             console.log("User session not made");
-            res.render('register', { msg: "Incorrect Password" });
+            res.render('login', { msg: "Incorrect Password" });
         }
     } catch (err) { //error handling
         console.error(err);

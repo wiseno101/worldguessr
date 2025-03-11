@@ -73,13 +73,14 @@ function initMap() {
 //create new map for map modal
       map = new google.maps.Map(mapElement, {
           center: { lat: 0, lng: 0 },
-          zoom: 12,
+          zoom: 1,
           streetViewControl: false
       });
 
       console.log('Google Map initialized successfully');
 
       // function from Professor Toporski modified for finding personal location i think
+
       if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
               function (position) {
