@@ -1,7 +1,7 @@
 console.log('games.js launched');
 
-const gameBinId = '67ce01a8e41b4d34e4a390f4';
-const apiKey = '$2a$10$UWl/UsMmB.v6jw7Y1I9zquaKE5OWGPLGu5QBweYdyhZudOt.AJezS';  // Replace with your JSONbin API key
+const gameBinId = '67ce01a8e41b4d34e4a390f4'; //game JSONbin ID
+const apiKey = '$2a$10$UWl/UsMmB.v6jw7Y1I9zquaKE5OWGPLGu5QBweYdyhZudOt.AJezS';  // JSONbin API key
 
 // Fetch game data from JSONbin
 const getGamedata = async () => {
@@ -29,13 +29,14 @@ const getGamedata = async () => {
         throw new Error('No game data found');
     }
 
-    // Dynamically create list items for each game
+    // Dynamically create list items for each game; not currently needed
+/*
     const gamesList = document.querySelector('#games-list'); // Select the UL element where games will be listed
     data.games.forEach(game => {
         const listItem = document.createElement('li');
         listItem.textContent = game.name; // Assuming each game object has a 'name' property
         gamesList.appendChild(listItem);
-    });
+    }); */
 };
 
 // Call the function to load the games
