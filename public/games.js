@@ -39,5 +39,10 @@ const getGamedata = async () => {
     }); */
 };
 
+
 // Call the function to load the games
 getGamedata();
+
+import {funny} from './app.mjs';
+console.log(funny);
+
