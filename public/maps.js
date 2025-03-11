@@ -1,16 +1,19 @@
-console.log('maps.js launched');
-let map;
-let markers = {};
-let markersData = []; 
+console.log('maps.js launched'); // console log for maps.js being loaded to the website
+let map; //global variable for map
+let markers = {}; // global object for markers
+let markersData = []; //global array for markerData; ie coordinates of guess
 
+//event listener to ensure DOM loads all HTML before executing js code
 window.addEventListener('DOMContentLoaded', (event) => {
-  console.log('DOM fully loaded and parsed');
+  console.log('DOM fully loaded and parsed'); 
 
   // Add event listeners for the modal buttons after the DOM is fully loaded
-  document.getElementById('openModalButton').addEventListener('click', openMapModal);
-  document.querySelector('.close').addEventListener('click', closeMapModal);
 
-  loadGoogleMapsAPI();
+ document.getElementById('openModalButton').addEventListener('click', openMapModal);
+ 
+//refresh googlemapsAPI when modal is closed document.querySelector('.close').addEventListener('click', closeMapModal);
+
+  loadGoogleMapsAPI(); 
 });
 
 // Fetch API key from JSONbin
@@ -20,11 +23,12 @@ async function getAPIkey() {
       const existingData = await getJSONData();
       console.log('API data fetched:', existingData);
 
+//ensure apikey is recieved
       if (existingData && existingData.api_keys && existingData.api_keys.length > 0) {
           const tempKey = existingData.api_keys[0].key;
           console.log('API Key:', tempKey);
           return tempKey;
-      } else {
+      } else { // error handling for incorect JSONbin connection
           console.error('Invalid JSON structure:', existingData);
           return null;
       }
@@ -65,7 +69,7 @@ function initMap() {
       if (!mapElement) {
           throw new Error('Map element not found');
       }
-
+//create new map for map modal
       map = new google.maps.Map(mapElement, {
           center: { lat: 0, lng: 0 },
           zoom: 12,
@@ -74,7 +78,7 @@ function initMap() {
 
       console.log('Google Map initialized successfully');
 
-      // Try HTML5 geolocation
+      // function from Professor Toporski modified for finding personal location i think
       if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
               function (position) {
@@ -99,8 +103,9 @@ function initMap() {
           addMarker(event.latLng, 'New Marker', `Coordinates: ${event.latLng.lat()}, ${event.latLng.lng()}`);
       });
 
-      // Initialize Street View
+      // Initialize Street View; needs to be modified in order to be passed coordinates instead of just millville
       const game_pos = { lat: 39.395370, lng: -75.038460 };
+//create new streetview panorama
       const panorama = new google.maps.StreetViewPanorama(
           document.getElementById("pano"),
           {
@@ -117,11 +122,11 @@ function initMap() {
   }
 }
 
-// Add a marker to the map
+// Add a marker to the map; need to make only work for one markee
 function addMarker(location, title, content) {
 var order = markersData.length; // Assign the next sequential order
 
-// Add marker information to the array FIRST
+// Add marker information to the array FIRST; need to make write to global variable for scoring when submit is pressed
 markersData.push({ order: order, coordinates: { lat: location.lat(), lng: location.lng() } });
 
 // Now create the marker
@@ -153,7 +158,7 @@ setTimeout(() => {
 }, 100);
 }
 
-// Delete a marker
+// Delete a marker,
 function deleteMarker(order) {
   alert("Current Markers (Before Deletion):\n" + JSON.stringify(markersData, null, 2));
 
@@ -181,7 +186,7 @@ function deleteMarker(order) {
   alert("Updated Markers (After Deletion):\n" + JSON.stringify(markersData, null, 2));
 }
 
-// Fetch JSON data from JSONbin
+// Fetch JSON data from JSONbin function from Professor Toporski
 async function getJSONData() {
   const binId = '67bde89dad19ca34f811c459';
   const apiKey = '$2a$10$UWl/UsMmB.v6jw7Y1I9zquaKE5OWGPLGu5QBweYdyhZudOt.AJezS';
@@ -209,7 +214,7 @@ async function getJSONData() {
   }
 }
 
-// Update JSONbin data
+// Update JSONbin data function from professor toporski
 async function putJSONData(updatedData) {
   const binId = '67bde89dad19ca34f811c459';
   const apiKey = '$2a$10$UWl/UsMmB.v6jw7Y1I9zquaKE5OWGPLGu5QBweYdyhZudOt.AJezS';
