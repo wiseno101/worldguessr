@@ -11,7 +11,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
  document.getElementById('openModalButton').addEventListener('click', openMapModal);
  
-//refresh googlemapsAPI when modal is closed document.querySelector('.close').addEventListener('click', closeMapModal);
+//refresh googlemapsAPI when modal is closed
+ document.querySelector('.close').addEventListener('click', closeMapModal);
 
   loadGoogleMapsAPI(); 
 });
