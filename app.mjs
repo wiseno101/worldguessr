@@ -302,6 +302,16 @@ app.get('/maps', (req, res) => {
         res.render('maps');
     }
 });
+app.get('/create', (req, res) => {
+  //function to verify user is logged in
+  if (!req.session.user) {
+      console.log('Unable to access');
+      res.redirect('/login');
+  } else {
+      console.log("Accessing create");
+      res.render('create');
+  }
+});
 //games loading, with data from jsonbin
 app.get('/games', async (req, res) => {
     if (!req.session.user) {

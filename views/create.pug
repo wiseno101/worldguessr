@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+//- view for pulling up googlemapsapi streetview with map modal on top
+html
+  head
+    style 
+      include styles.css
+    title Google Maps Integration
+
+
+  body
+    h1 Google Maps with Street View
+    #pano(style="height: 800px; width: 100%; margin-top: 10px;")
+
+    //- Modal HTML
+    #mapModal.modal
+      .modal-content
+        span.close &times;
+        #map(style="height: 300px; width: 100%;")
+
+    //- Trigger Modal Open Button
+    button#openModalButton Open Map Modal
+
+    //- Load Google Maps API dynamically (handled in maps.js)
+    script(src="/create.js")
