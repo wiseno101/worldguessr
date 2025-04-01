@@ -1,4 +1,4 @@
-console.log('maps.js launched'); // console log for maps.js being loaded to the website
+console.log('create.js launched'); // console log for maps.js being loaded to the website
 let map; //global variable for map
 let markers = {}; // global object for markers
 let markersData = []; //global array for markerData; ie coordinates of guess
