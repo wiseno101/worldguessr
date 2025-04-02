@@ -8,13 +8,13 @@ html
 
 
   body
-    #pano(style="position: absolute; top: 40px; bottom: 20px; width: 100%;")
+    #pano(style="position: absolute; top: 40px; bottom: 20px; width: 100%; z-index: 0;")
 
     //- Modal HTML
     #mapModal.modal
       .modal-content
         span.close &times;
-        #map(style="height: 300px; width: 100%;")
+        #map(style="position: absolute; top: 40px; bottom: 20px; z-index: 2500000")
 
     //- Trigger Modal Open Button
     button#openModalButton Open Map Modal
