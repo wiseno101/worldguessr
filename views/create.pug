@@ -11,10 +11,10 @@ html
     #pano(style="position: absolute; width: 100%; z-index: -1")
 
     //- Modal HTML
-    #mapModal.modal
+    #mapModal.modal(style="position: relative;")
       .modal-content
         span.close &times;
-        #map(style="position: fixed; width: 100%; margin: 0; z-index: 2")
+        #map(style="position: fixed; width: 100%; margin: 0; padding: 10px; z-index: 2")
 
     //- Trigger Modal Open Button
     button#openModalButton Map
