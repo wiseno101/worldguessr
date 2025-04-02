@@ -77,9 +77,6 @@ function initMap() {
           streetViewControl: false
       });
 
-      var $fullscreenDiv = $map.children(`div:first`);
-      $(`#mybutton1`).appendTo($fullscreenDiv);
-
       console.log('Google Map initialized successfully');
 
       // function from Professor Toporski modified for finding personal location i think
