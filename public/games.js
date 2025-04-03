@@ -1,43 +1,31 @@
-console.log('games.js launched');
+// games.js
 
-const gameBinId = '67ce01a8e41b4d34e4a390f4'; //game JSONbin ID
-const apiKey = '$2a$10$UWl/UsMmB.v6jw7Y1I9zquaKE5OWGPLGu5QBweYdyhZudOt.AJezS';  // JSONbin API key
-
-// Fetch game data from JSONbin
-const getGamedata = async () => {
-    const url = `https://api.jsonbin.io/v3/b/${gameBinId}?meta=false`;
-
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'X-Master-Key': apiKey,
-            'Content-Type': 'application/json'
-        }
-    });
-
-    if (response.status !== 200) {
-        throw new Error("Cannot fetch data");
+// Fetch and display the games
+const getGameData = async () => {
+    try {
+        const response = await fetch('/get-selected-game');
+        const data = await response.json();
+        const gamesList = document.querySelector('#games-list');
+        data.games.forEach(game => {
+            const form = document.createElement('form');
+            form.action = '/maps';
+            form.method = 'POST';
+            form.innerHTML = `
+                <input type="hidden" name="gameId" value="${game._id}">
+                <button type="submit">${game._id}: ${game.description}</button>
+            `;
+            gamesList.appendChild(form);
+        });
+    } catch (error) {
+        console.error("Error fetching games:", error);
     }
-
-    const data = await response.json();
-
-    // Log the fetched data to inspect its structure
-    console.log('Fetched Data:', data);
-
-    // Ensure that the 'games' field exists in the response
-    if (!data.games) {
-        throw new Error('No game data found');
-    }
-
-    // Dynamically create list items for each game; not currently needed
-/*
-    const gamesList = document.querySelector('#games-list'); // Select the UL element where games will be listed
-    data.games.forEach(game => {
-        const listItem = document.createElement('li');
-        listItem.textContent = game.name; // Assuming each game object has a 'name' property
-        gamesList.appendChild(listItem);
-    }); */
 };
 
-// Call the function to load the games
-getGamedata();
+// When the game is selected, save it to localStorage
+const selectGame = (gameId) => {
+    localStorage.setItem('selectedGame', JSON.stringify(gameId));
+    window.location.href = "/maps";  // Navigate to maps page
+};
+
+// Call getGameData to load games
+getGameData();

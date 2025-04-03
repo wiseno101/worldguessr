@@ -5,20 +5,20 @@ html
     style 
       include styles.css
     title Google Maps Integration
-
-
   body
     h1 Google Maps with Street View
-    #pano(style="height: 800px; width: 100%; margin-top: 10px;")
+    if selectedGame
+      p Selected Game: #{selectedGame._id}: #{selectedGame.description} 
+      #pano(style="height: 800px; width: 100%; margin-top: 10px;")
+    else
+      p No game selected! maps.pug
+    
 
-    //- Modal HTML
     #mapModal.modal
       .modal-content
         span.close &times;
         #map(style="height: 300px; width: 100%;")
 
-    //- Trigger Modal Open Button
     button#openModalButton Open Map Modal
 
-    //- Load Google Maps API dynamically (handled in maps.js)
     script(src="/maps.js")

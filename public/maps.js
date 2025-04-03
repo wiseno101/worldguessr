@@ -2,7 +2,8 @@ console.log('maps.js launched'); // console log for maps.js being loaded to the 
 let map; //global variable for map
 let markers = {}; // global object for markers
 let markersData = []; //global array for markerData; ie coordinates of guess
-
+let round = 0; // change to round counter when that woreksa
+let hasGuessed = null;
 //event listener to ensure DOM loads all HTML before executing js code
 window.addEventListener('DOMContentLoaded', (event) => {
   console.log('DOM fully loaded and parsed'); 
@@ -60,133 +61,120 @@ async function loadGoogleMapsAPI() {
   }
 }
 
+const getSelectedGame = async () => {
+    const response = await fetch('/get-selected-game');
+    if (response.ok) {
+        const data = await response.json();
+        console.log('getSelectedGame in maps,js', data)
+        return data;
+    }
+    throw new Error('Game data not found');
+};
+
+
 // Initialize the Google Map
-function initMap() {
-  console.log('Initializing Google Map...');
+async function initMap() {
+    try {
+        const selectedGame = await getSelectedGame(); // Wait for selectedGame data
+        if (!selectedGame) {
+      alert('No game data available');
+      return;
+    }
+
+    const game_pos = { lat: selectedGame.game_data[round].coordinates.lat, lng: selectedGame.game_data[round].coordinates.lng};
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: { lat: 0, lng: 0 },
+      zoom: 1,
+      streetViewControl: false
+    });
   
-  try {
-      // Ensure the #map element exists before initializing the map
-      const mapElement = document.getElementById('map');
-      if (!mapElement) {
-          throw new Error('Map element not found');
+    const panorama = new google.maps.StreetViewPanorama(document.getElementById("pano"), {
+      position: game_pos,
+      pov: { heading: 34, pitch: 10 },
+      disableDefaultUI: true,
+      
+    });
+  console.log('streetview loaded witrh these coords', game_pos)
+    map.setStreetView(panorama);
+
+  
+    map.addListener('click', function (event) {
+      if (hasGuessed) {
+        alert("You have already made your guess!");
+        return;
       }
-//create new map for map modal
-      map = new google.maps.Map(mapElement, {
-          center: { lat: 0, lng: 0 },
-          zoom: 1,
-          streetViewControl: false
-      });
-
-      console.log('Google Map initialized successfully');
-
-      // function from Professor Toporski modified for finding personal location i think
-
-      if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-              function (position) {
-                  let pos = { lat: position.coords.latitude, lng: position.coords.longitude };
-
-                  if (nocenter === 1) {
-                      map.setCenter(pos);
-                      nocenter = 0;
-                  }
-
-                  addMarker(pos, 'Your Location', `Current Coordinates: ${pos.lat}, ${pos.lng}`);
-              },
-              function (error) {
-                  console.warn("Geolocation failed:", error);
-                  alert("Could not get location. Please enable GPS or try again.");
-              }
-          );
-      }
-
-      // Click event listener for adding markers
-      map.addListener('click', function (event) {
-          addMarker(event.latLng, 'New Marker', `Coordinates: ${event.latLng.lat()}, ${event.latLng.lng()}`);
-      });
-
-      // Initialize Street View; needs to be modified in order to be passed coordinates instead of just millville
-      const game_pos = { lat: 39.395370, lng: -75.038460 };
-//create new streetview panorama
-      const panorama = new google.maps.StreetViewPanorama(
-          document.getElementById("pano"),
-          {
-              position: game_pos,
-              pov: { heading: 34, pitch: 10 },
-              disableDefaultUI: true,
-          }
-      );
-
-      map.setStreetView(panorama);
-
-  } catch (error) {
-      console.error('Error initializing Google Map:', error);
-  }
-}
-
-// Add a marker to the map; need to make only work for one markee
+      hasGuessed = true;
+      addMarker(event.latLng, 'New Marker', `Coordinates: ${event.latLng.lat()}, ${event.latLng.lng()}`);
+    });
+    } catch (error) {
+    console.error('Error initializing map:', error);
+    }
+  };
+  
+  // Add a marker to the map; need to make only work for one markee
 function addMarker(location, title, content) {
-var order = markersData.length; // Assign the next sequential order
-
-// Add marker information to the array FIRST; need to make write to global variable for scoring when submit is pressed
-markersData.push({ order: order, coordinates: { lat: location.lat(), lng: location.lng() } });
-
-// Now create the marker
-var marker = new google.maps.Marker({
-  position: location,
-  map: map,
-  title: title
-});
-
-markers[order] = marker; // Store marker reference
-
-var infowindow = new google.maps.InfoWindow({
-  content: `<div>
-            <p>${content}</p>
-            <button id="deleteMarkerButton${order}">Delete</button>
-          </div>`
-});
-
-marker.addListener('click', function () {
-  infowindow.open(map, marker);
-  document.getElementById(`deleteMarkerButton${order}`).addEventListener('click', function () {
-    deleteMarker(order);
-  });
-});
-
-// Show updated JSON **AFTER** the new marker is added
-setTimeout(() => {
-  alert("Updated Markers (After Adding New Marker):\n" + JSON.stringify(markersData, null, 2));
-}, 100);
-}
-
-// Delete a marker,
-function deleteMarker(order) {
-  alert("Current Markers (Before Deletion):\n" + JSON.stringify(markersData, null, 2));
-
-  // Remove marker from the map
-  if (markers[order]) {
-      markers[order].setMap(null);
-      delete markers[order];
-  }
-
-  // Remove marker from array
-  markersData = markersData.filter(marker => marker.order !== order);
-
-  // Reassign orders sequentially
-  markersData.forEach((marker, index) => {
-      marker.order = index;
-  });
-
-  // Rebuild markers object
-  let updatedMarkers = {};
-  markersData.forEach((marker, index) => {
-      updatedMarkers[index] = markers[index];
-  });
-  markers = updatedMarkers;
-
-  alert("Updated Markers (After Deletion):\n" + JSON.stringify(markersData, null, 2));
-}
+    var order = markersData.length; // Assign the next sequential order
+    
+    // Add marker information to the array FIRST; need to make write to global variable for scoring when submit is pressed
+    markersData.push({ order: order, coordinates: { lat: location.lat(), lng: location.lng() } });
+    
+    // Now create the marker
+    var marker = new google.maps.Marker({
+      position: location,
+      map: map,
+      title: title
+    });
+    
+    markers[order] = marker; // Store marker reference
+    
+    var infowindow = new google.maps.InfoWindow({
+      content: `<div>
+                <p>${content}</p>
+                <button id="deleteMarkerButton${order}">Delete</button>
+              </div>`
+    });
+    
+    marker.addListener('click', function () {
+      infowindow.open(map, marker);
+      document.getElementById(`deleteMarkerButton${order}`).addEventListener('click', function () {
+        deleteMarker(order);
+      });
+    });
+    
+    // Show updated JSON **AFTER** the new marker is added
+    setTimeout(() => {
+      alert("Updated Markers (After Adding New Marker):\n" + JSON.stringify(markersData, null, 2));
+    }, 100);
+    }
+    
+    // Delete a marker,
+    function deleteMarker(order) {
+      alert("Current Markers (Before Deletion):\n" + JSON.stringify(markersData, null, 2));
+    
+      // Remove marker from the map
+      if (markers[order]) {
+          markers[order].setMap(null);
+          delete markers[order];
+      }
+    
+      // Remove marker from array
+      markersData = markersData.filter(marker => marker.order !== order);
+    
+      // Reassign orders sequentially
+      markersData.forEach((marker, index) => {
+          marker.order = index;
+      });
+    
+      // Rebuild markers object
+      let updatedMarkers = {};
+      markersData.forEach((marker, index) => {
+          updatedMarkers[index] = markers[index];
+      });
+      markers = updatedMarkers;
+    
+      alert("Updated Markers (After Deletion):\n" + JSON.stringify(markersData, null, 2));
+      hasGuessed = null;
+    }
 
 // Fetch JSON data from JSONbin function from Professor Toporski
 async function getJSONData() {

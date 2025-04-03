@@ -1,0 +1,9 @@
+html
+  head
+    title Game Score
+  body
+    h1 Your Total Score
+    p#finalScore Score: 0
+    a(href="/games") Play Again
+    script.
+      document.getElementById("finalScore").textContent = "Score: " + localStorage.getItem("finalScore");
