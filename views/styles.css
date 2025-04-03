@@ -310,10 +310,10 @@ input[type=text], input[type=password], input[type=email]{
 
 #mapModal {
   position: fixed;
-  bottom: 10px; /* Adjust this value to change the distance from the bottom */
-  right: 10px; /* Adjust this value to change the distance from the right */
-  width: 25%; /* You can adjust the width to your liking */
-  height: 25%; /* You can adjust the height to your liking */
+  bottom: 15px; /* Adjust this value to change the distance from the bottom */
+  right: 15px; /* Adjust this value to change the distance from the right */
+  width: 10%; /* You can adjust the width to your liking */
+  height: 10%; /* You can adjust the height to your liking */
   background-color: rgba(255, 255, 255, 0.9); /* Light background for the modal */
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
