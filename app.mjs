@@ -139,6 +139,14 @@ const gameBinId = '67ce01a8e41b4d34e4a390f4'; //JSONbin ID for games
 */
 const apiKey = '$2a$10$UWl/UsMmB.v6jw7Y1I9zquaKE5OWGPLGu5QBweYdyhZudOt.AJezS';  //JSONbin API key
 
+//game logic vars
+
+let global_round = 0;
+let selectedGame = null; // Store selected game globally
+
+
+
+
 app.set('views', './views'); // sets views directory for express app
 app.set('view engine', 'pug'); // sets the view engine for the express server to pug(can serve pug and html mixed)
 app.use(express.static('public')); // sets the static folder to 'public'; needed to call files in html and js
@@ -223,7 +231,7 @@ const putJSONData = async (updatedData) => {
 };
 
 //fetch game data from json bin; modified version
-const getGamedata = async () => {
+const getGameData = async () => {
     const url = `https://api.jsonbin.io/v3/b/${gameBinId}?meta=false`;
 
     const response = await fetch(url, {
@@ -250,6 +258,8 @@ const getGamedata = async () => {
 
     return data;  // Directly return the data without expecting a 'record' field
 };
+
+
 // Middleware to parse the body
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -291,17 +301,19 @@ app.get('/home', (req, res) => {
     }
 });
 
-//maps page get
+// Maps route: Retrieve selected game from the session
 app.get('/maps', (req, res) => {
-		//function to verify user is logged in
-    if (!req.session.user) {
-        console.log('Unable to access');
-        res.redirect('/login');
-    } else {
-        console.log("Accessing maps");
-        res.render('maps');
-    }
+  const selectedGame = req.session.selectedGame;
+  if (!selectedGame) {
+    return res.status(400).send("No game selected /maps in app.mjs");
+  } else {
+    res.render('maps', { selectedGame });
+  };
+
+
 });
+
+//create page get
 app.get('/create', (req, res) => {
   //function to verify user is logged in
   if (!req.session.user) {
@@ -312,26 +324,54 @@ app.get('/create', (req, res) => {
       res.render('create');
   }
 });
+
 //games loading, with data from jsonbin
 app.get('/games', async (req, res) => {
-    if (!req.session.user) {
-        console.log('Unable to access');
-        res.redirect('/login');
-    } else {
-        console.log("Accessing maps");
-        try {
-            const data = await getGamedata(); // Fetch game data
-            if (data && data.games) {
-                res.render('games', { games: data.games }); // Pass the games array to the Pug template
-            } else {
-                res.status(500).send('Games data is unavailable'); //error handling
-            }
-        } catch (err) {
-            console.error('Error fetching games:', err);
-            res.status(500).send('Internal Server Error');
-        }
-    };
+  try {
+      const response = await fetch(`https://api.jsonbin.io/v3/b/${gameBinId}?meta=false`, {
+          method: 'GET',
+          headers: { 'X-Master-Key': apiKey, 'Content-Type': 'application/json' }
+      });
+      const data = await response.json();
+      res.render('games', { games: data.games });
+  } catch (error) {
+      console.error("Error fetching game data:", error);
+      res.status(500).send("Error fetching games");
+  }
 });
+
+// get route to assist maps.js to get the selected
+app.get('/get-selected-game', (req, res) => {
+  // Retrieve the selected game from the session or a global variable
+  if (!req.session.selectedGame) {
+      return res.status(404).json({ error: 'No game selected' });
+  }
+  console.log('get-selected-game:',req.session.selectedGame);
+  res.json(req.session.selectedGame);
+});
+
+//post route to assist game select
+app.post('/select-game', async (req, res) => {
+  const { gameId } = req.body;
+  try {
+      const gameData = await getGameData();
+      const selectedGame = gameData.games.find(game => game._id === gameId);
+
+      if (!selectedGame) {
+          return res.status(404).send({ error: 'Game not found' });
+      }
+
+      // Store the selected game in the session
+      req.session.selectedGame = selectedGame;  // Store selected game in session
+      console.log('select-game selection: ', selectedGame)
+      res.redirect('/maps');
+  } catch (error) {
+      console.error('Error selecting game:', error);
+      res.status(500).send('Error selecting game');
+  }
+});
+
+
 
 //registerpage post
 app.post('/register', express.urlencoded({ extended: false }), async (req, res) => {
@@ -404,6 +444,3 @@ app.use((err, req, res, next) => { // errror handling for when a page cannot loa
 });
 
 
-//game logic vars
-
-let global_round = 0;
