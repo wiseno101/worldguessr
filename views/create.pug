@@ -4,19 +4,22 @@ html
   head
     style 
       include styles.css
-
+    #wrapper { position: relative;}
+    #over_map { position: absolute; top: 10px; left 10px; z-index: 99 }
     title Google Maps Integration
 
 
   body
+  <div id ="wrapper">
     #pano(style="position: absolute; width: 100%")
-
+  </div>
     //- Modal HTML
-    #mapModal.modal(style="position: absolute; top: 10px; left 10px; z-index: 99")
+    <div id="over_map">
+    #mapModal.modal//(style="position: absolute; top: 10px; left 10px; z-index: 99")
       .modal-content
         span.close &times;
-        #map(style="position: absolute; width: 100%; margin: 0; padding: 1px; z-index: 99")
-
+        #map//(style="position: absolute; width: 100%; margin: 0; padding: 1px; z-index: 99")
+    </div>
     //- Trigger Modal Open Button
     button#openModalButton Map
 
