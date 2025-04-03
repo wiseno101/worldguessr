@@ -301,6 +301,7 @@ input[type=text], input[type=password], input[type=email]{
   float: left;
   height: 100%;
   width: 50%;
+  z-index: 1;
 }
 #map {
   height: 100vh;
