@@ -324,7 +324,7 @@ input[type=text], input[type=password], input[type=email]{
 .modal-content {
   background-color: white;
   color: black;
-  padding: 20px;
+  padding: 5px;
   border: 1px solid #888;
   border-radius: 10px;
   width: 100%;
