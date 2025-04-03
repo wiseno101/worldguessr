@@ -77,6 +77,9 @@ function initMap() {
           streetViewControl: false
       });
 
+      map.index = 1;
+      maps.control[google.maps.ControlPosition.TOP_RIGHT].push(map);
+
       console.log('Google Map initialized successfully');
 
       // function from Professor Toporski modified for finding personal location i think
