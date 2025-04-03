@@ -4,18 +4,17 @@ html
   head
     style 
       include styles.css
-  
     title Google Maps Integration
 
 
   body
-    #pano(style="position: absolute; height: 100%; width: 100%; z-index: 1")
+    #pano
 
     //- Modal HTML
     #mapModal.modal(style="position: absolute;")
       .modal-content
         span.close &times;
-        #map(style="position: absolute; width: 100%; margin: 0; padding: 1px;")
+        #map
 
     //- Trigger Modal Open Button
     button#openModalButton(style="position: absolute;") Map
