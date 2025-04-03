@@ -1,4 +1,4 @@
-console.log('maps.js launched'); // console log for maps.js being loaded to the website
+console.log('create.js launched'); // console log for create.js being loaded to the website
 let map; //global variable for map
 let markers = {}; // global object for markers
 let markersData = []; //global array for markerData; ie coordinates of guess
@@ -107,7 +107,7 @@ function initMap() {
 
       // Initialize Street View; needs to be modified in order to be passed coordinates instead of just millville
       const game_pos = { lat: 39.395370, lng: -75.038460 };
-//create new streetview panorama
+    //create new streetview panorama
       const panorama = new google.maps.StreetViewPanorama(
           document.getElementById("pano"),
           {
