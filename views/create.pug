@@ -8,16 +8,16 @@ html
 
 
   body
-    #pano(style="position: absolute; width: 100%; z-index: auto")
+    #pano
 
     //- Modal HTML
-    #mapModal.modal(style="position: relative; z-index: 250")
+    #mapModal.modal(style="position: absolute;")
       .modal-content
         span.close &times;
-        #map(style="position: relative; width: 100%; margin: 0; padding: 10px; z-index: 250")
+        #map
 
     //- Trigger Modal Open Button
-    button#openModalButton Map
+    button#openModalButton(style="position: absolute;") Map
 
     //- Load Google Maps API dynamically (handled in maps.js)
     script(src="/create.js")
