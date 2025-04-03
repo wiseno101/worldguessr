@@ -8,17 +8,16 @@ html
 
 
   body
-    h1 Google Maps with Street View
-    #pano(style="height: 800px; width: 100%; margin-top: 5px;")
+     #pano(style="position: absolute; width: 100%; z-index: -1;")
 
     //- Modal HTML
-    #mapModal.modal
+    #mapModal.modal(style="position: relative;")
       .modal-content
         span.close &times;
-        #map(style="height: 300px; width: 100%;")
+        #map(style="position: fixed; width: 100%; margin: 0; padding: 10px; z-index: 2")
 
     //- Trigger Modal Open Button
-    button#openModalButton Open Map Modal
+    button#openModalButton Map 
 
     //- Load Google Maps API dynamically (handled in maps.js)
     script(src="/create.js")
