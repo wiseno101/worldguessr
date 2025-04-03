@@ -126,7 +126,7 @@ const apiKey = '$2a$10$UWl/UsMmB.v6jw7Y1I9zquaKE5OWGPLGu5QBweYdyhZudOt.AJezS';  
 
 let global_round = 0;
 let selectedGame = null; // Store selected game globally
-
+let global_score = null
 
 
 
@@ -352,6 +352,23 @@ app.post('/select-game', async (req, res) => {
       console.error('Error selecting game:', error);
       res.status(500).send('Error selecting game');
   }
+});
+
+//submit score post
+app.post('/submit-score', (req, res) => {
+    const { score } = req.body;
+
+    console.log('Received score:', score); // Log the received score
+
+    if (!score || typeof score !== 'number') {
+        return res.status(400).json({
+            message: 'Invalid score data received',
+            received: req.body // Log received data for debugging
+        });
+    }
+
+    // Do something with the score, like saving to a database
+    res.status(200).json({ message: 'Score submitted successfully' });
 });
 
 

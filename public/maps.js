@@ -2,8 +2,12 @@ console.log('maps.js launched'); // console log for maps.js being loaded to the 
 let map; //global variable for map
 let markers = {}; // global object for markers
 let markersData = []; //global array for markerData; ie coordinates of guess
-let round = 1; // change to round counter when that woreksa
+let round = 0; // roundcounter
+let totalRounds = 5;
+let totalscore = 0;
 let hasGuessed = null;
+let guessPosition = null; // Stores the guessed position
+let actualPosition = null; // Stores the actual game position
 //event listener to ensure DOM loads all HTML before executing js code
 window.addEventListener('DOMContentLoaded', (event) => {
   console.log('DOM fully loaded and parsed'); 
@@ -74,50 +78,121 @@ const getSelectedGame = async () => {
 
 // Initialize the Google Map
 async function initMap() {
-    try {
-        const selectedGame = await getSelectedGame(); // Wait for selectedGame data
-        if (!selectedGame) {
-      alert('No game data available');
-      return;
-    }
+  try {
+      const selectedGame = await getSelectedGame();
+      if (!selectedGame || !selectedGame.game_data[round]) {
+          alert('No game data available for this round');
+          return;
+      }
 
-    const game_pos = { lat: selectedGame.game_data[round].coordinates.lat, lng: selectedGame.game_data[round].coordinates.lng};
-    map = new google.maps.Map(document.getElementById('map'), {
-      center: { lat: 0, lng: 0 },
-      zoom: 1,
-      streetViewControl: false
-    });
-  
-    const panorama = new google.maps.StreetViewPanorama(document.getElementById("pano"), {
-      position: game_pos,
-      pov: { heading: 34, pitch: 10 },
-      disableDefaultUI: true,
-      showRoadLabels: false
+      // Load the actual coordinates for the round
+      actualPosition = { 
+          lat: selectedGame.game_data[round].coordinates.lat, 
+          lng: selectedGame.game_data[round].coordinates.lng 
+      };
+
+      // Initialize Map
+      map = new google.maps.Map(document.getElementById('map'), {
+          center: { lat: 0, lng: 0 },
+          zoom: 1,
+          streetViewControl: false
+      });
+
+      // Initialize Street View
+      const panorama = new google.maps.StreetViewPanorama(document.getElementById("pano"), {
+          position: actualPosition,
+          pov: { heading: 34, pitch: 10 },
+          disableDefaultUI: true,
+          showRoadLabels: false
+      });
+      map.setStreetView(panorama);
+
+      console.log(`Round ${round + 1} loaded with coordinates`, actualPosition);
+
+      // Allow user to place a single guess marker
+      hasGuessed = false;
+      guessPosition = null;
       
-    });
-    try{    map.setStreetView(panorama);
-    }catch (error) {
-      console.error('Error initializing stretview:', error);
-      }
-      console.log('streetview loaded witrh these coords', game_pos)
+      map.addListener('click', function (event) {
+          if (hasGuessed) {
+              alert("You have already made your guess!");
+              return;
+          }
+          hasGuessed = true;
+          guessPosition = {
+              lat: event.latLng.lat(),
+              lng: event.latLng.lng(),
+          };
+          addMarker(event.latLng, 'Your Guess', `Coordinates: ${event.latLng.lat()}, ${event.latLng.lng()}`);
+      });
 
-  
-    map.addListener('click', function (event) {
-      if (hasGuessed) {
-        alert("You have already made your guess!");
-        return;
-      }
-      hasGuessed = true;
-      addMarker(event.latLng, 'New Marker', `Coordinates: ${event.latLng.lat()}, ${event.latLng.lng()}`);
+      // Submit guess and calculate score
+      document.getElementById("submitGuess").addEventListener("click", function () {
+        if (!guessPosition) {
+            return;
+        }
+        if (!actualPosition) {
+            alert("Actual game coordinates not loaded!");
+            return;
+        }
+    
+        // Calculate score
+        const score = calculateScore(guessPosition, actualPosition);
+        document.getElementById("scoreDisplay").innerText = `Previous Round Score: ${score}`;
+        totalscore = totalscore + score;
+        console.log("Calculated score:", score);
+        console.log("Total score before submitting:", totalscore);
+    
+        // Proceed to next round
+        if (round < totalRounds - 1) {
+            round++; // Move to next round
+            hasGuessed = false;
+            guessPosition = null;
+            actualPosition = null;
+            deleteMarker(1);
+    
+            initMap(); // Reload the map for the next round
+        } else {
+            // Check if the total score is a valid number
+            if (typeof totalscore !== 'number') {
+                console.error("Invalid total score:", totalscore);
+                return;
+            }
+            console.log("Payload being sent:", JSON.stringify({ score: totalscore }));
+
+            // Submit the total score to the backend
+            fetch('/submit-score', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ score: totalscore }) // Ensure correct JSON structure
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Score submitted successfully:', data);
+                // Optionally, redirect or show a success message
+                // window.location.href = "/games"; // Navigate after submission
+            })
+            .catch(error => console.error('Error submitting score:', error));
+        }
     });
-    } catch (error) {
-    console.error('Error initializing map:', error);
-    }
-  };
+
+      // Update round display
+      document.getElementById("roundDisplay").innerText = `Round: ${round + 1} / ${totalRounds}`;
+      document.getElementById("totalscore").innerText = `Total Score: ${totalscore}`;
+
+
+
+  } catch (error) {
+      console.error('Error initializing map:', error);
+  }
+}
+
   
   // Add a marker to the map; need to make only work for one markee
 function addMarker(location, title, content) {
-    var order = markersData.length; // Assign the next sequential order
+    var order = 1; // Assign the next sequential order
     
     // Add marker information to the array FIRST; need to make write to global variable for scoring when submit is pressed
     markersData.push({ order: order, coordinates: { lat: location.lat(), lng: location.lng() } });
@@ -144,16 +219,11 @@ function addMarker(location, title, content) {
         deleteMarker(order);
       });
     });
-    
-    // Show updated JSON **AFTER** the new marker is added
-    setTimeout(() => {
-      alert("Updated Markers (After Adding New Marker):\n" + JSON.stringify(markersData, null, 2));
-    }, 100);
-    }
+  }
+
     
     // Delete a marker,
     function deleteMarker(order) {
-      alert("Current Markers (Before Deletion):\n" + JSON.stringify(markersData, null, 2));
     
       // Remove marker from the map
       if (markers[order]) {
@@ -176,7 +246,6 @@ function addMarker(location, title, content) {
       });
       markers = updatedMarkers;
     
-      alert("Updated Markers (After Deletion):\n" + JSON.stringify(markersData, null, 2));
       hasGuessed = null;
     }
 
@@ -248,3 +317,22 @@ function closeMapModal() {
 document.getElementById('mapModal').style.display = 'none';
 document.body.style.overflow = 'auto'; // Re-enable scrolling when modal is closed
 }
+function calculateScore(guess, actual) {
+  const toRad = (x) => (x * Math.PI) / 180;
+  const R = 6371; // Earth radius in km
+  const dLat = toRad(actual.lat - guess.lat);
+  const dLng = toRad(actual.lng - guess.lng);
+  
+  const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(toRad(guess.lat)) * Math.cos(toRad(actual.lat)) * Math.sin(dLng / 2) ** 2;
+  
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in km
+  
+  console.log(`Calculated Distance: ${distance} km`); // Debugging
+
+  return Math.max(0, Math.round(5000 - distance * 100));
+  // exponential version return Math.max(0, Math.round(5000 * Math.exp(-distance / 200)));
+
+}
+

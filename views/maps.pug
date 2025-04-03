@@ -9,7 +9,13 @@ html
     h1 Google Maps with Street View
     if selectedGame
       p Selected Game: #{selectedGame._id}: #{selectedGame.description} 
-      #pano(style="height: 800px; width: 100%; margin-top: 10px;")
+      p <h2 id="roundDisplay">Round: 1 / 5</h2>
+      p <h3 id="totalscore">Total Score: 0</h3>
+      p <h4 id="scoreDisplay"></h4>
+
+
+
+      #pano(style="height: 700px; width: 100%; margin-top: 10px;")
     else
       p No game selected! maps.pug
     
@@ -20,5 +26,8 @@ html
         #map(style="height: 300px; width: 100%;")
 
     button#openModalButton Open Map Modal
+
+    <button id="submitGuess">Submit Guess</button>
+
 
     script(src="/maps.js")
