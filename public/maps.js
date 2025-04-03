@@ -2,7 +2,7 @@ console.log('maps.js launched'); // console log for maps.js being loaded to the 
 let map; //global variable for map
 let markers = {}; // global object for markers
 let markersData = []; //global array for markerData; ie coordinates of guess
-let round = 0; // change to round counter when that woreksa
+let round = 1; // change to round counter when that woreksa
 let hasGuessed = null;
 //event listener to ensure DOM loads all HTML before executing js code
 window.addEventListener('DOMContentLoaded', (event) => {
@@ -92,10 +92,14 @@ async function initMap() {
       position: game_pos,
       pov: { heading: 34, pitch: 10 },
       disableDefaultUI: true,
+      showRoadLabels: false
       
     });
-  console.log('streetview loaded witrh these coords', game_pos)
-    map.setStreetView(panorama);
+    try{    map.setStreetView(panorama);
+    }catch (error) {
+      console.error('Error initializing stretview:', error);
+      }
+      console.log('streetview loaded witrh these coords', game_pos)
 
   
     map.addListener('click', function (event) {
