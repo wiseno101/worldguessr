@@ -71,11 +71,14 @@ function initMap() {
           throw new Error('Map element not found');
       }
 //create new map for map modal
-      map = new google.mapss.Map(mapElement, {
+      map = new google.maps.Map(mapElement, {
           center: { lat: 0, lng: 0 },
           zoom: 1,
           streetViewControl: false
       });
+      
+      map.index = 1;
+      maps.control[google.maps.ControlPosition.TOP_RIGHT].push(map);
 
       console.log('Google Map initialized successfully');
 
