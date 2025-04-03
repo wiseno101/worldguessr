@@ -58,80 +58,63 @@ const binId = '67bde89dad19ca34f811c459';  // JSONbin ID for userID and api
 */
 const gameBinId = '67ce01a8e41b4d34e4a390f4'; //JSONbin ID for games
 /* topography of games jsonbin
-
 {
   "games": [
     {
       "_id": "NJ_1",
       "description": "This is NJ one",
-      "coordinates": [
+      "game_data": [
         {
           "round": "1",
-          "longitude": "A",
-          "latitude": "B"
+          "coordinates": {
+            "lat": 0,
+            "lng": 0
+          },
+          "hints": {
+            "hints_flag": "flag.png"
+          }
         },
         {
           "round": "2",
-          "longitude": "C",
-          "latitude": "D"
+          "coordinates": {
+            "lat": 0,
+            "lng": 0
+          },
+          "hints": {
+            "hints_flag": "flag.png"
+          }
         },
         {
           "round": "3",
-          "longitude": "E",
-          "latitude": "F"
+          "coordinates": {
+            "lat": 0,
+            "lng": 0
+          },
+          "hints": {
+            "hints_flag": "flag.png"
+          }
         },
         {
           "round": "4",
-          "longitude": "G",
-          "latitude": "H"
+          "coordinates": {
+            "lat": 0,
+            "lng": 0
+          },
+          "hints": {
+            "hints_flag": "flag.png"
+          }
         },
         {
           "round": "5",
-          "longitude": "I",
-          "latitude": "J"
-        }
-      ],
-      "hints": {
-        "hints_flag": [
-          "flag1.png",
-          "flag2.png",
-          "flag3.png",
-          "flag4.png",
-          "flag5.png"
-        ],
-        "hints_region": [
-          {
-            "lat1": "A",
-            "lat2": "B",
-            "long1": "C",
-            "long2": "D"
+          "coordinates": {
+            "lat": 0,
+            "lng": 0
           },
-          {
-            "lat1": "A",
-            "lat2": "B",
-            "long1": "C",
-            "long2": "D"
-          },
-          {
-            "lat1": "A",
-            "lat2": "B",
-            "long1": "C",
-            "long2": "D"
-          },
-          {
-            "lat1": "A",
-            "lat2": "B",
-            "long1": "C",
-            "long2": "D"
-          },
-          {
-            "lat1": "A",
-            "lat2": "B",
-            "long1": "C",
-            "long2": "D"
+          "hints": {
+            "hints_flag": "flag.png"
           }
-        ]
-      }
+        }
+      ]
     }
   ]
 }
