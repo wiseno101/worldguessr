@@ -76,9 +76,6 @@ function initMap() {
           zoom: 1,
           streetViewControl: false
       });
-      
-      map.index = 1;
-      maps.control[google.maps.ControlPosition.TOP_RIGHT].push(map);
 
       console.log('Google Map initialized successfully');
 
