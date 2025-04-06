@@ -21,11 +21,8 @@ const getGameData = async () => {
     }
 };
 
-// When the game is selected, save it to localStorage
-const selectGame = (gameId) => {
-    localStorage.setItem('selectedGame', JSON.stringify(gameId));
-    window.location.href = "/maps";  // Navigate to maps page
-};
+
 
 // Call getGameData to load games
 getGameData();
+

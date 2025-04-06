@@ -124,15 +124,14 @@ const apiKey = '$2a$10$UWl/UsMmB.v6jw7Y1I9zquaKE5OWGPLGu5QBweYdyhZudOt.AJezS';  
 
 //game logic vars
 
-let global_round = 0;
-let selectedGame = null; // Store selected game globally
-let global_score = null
 
 
 
 app.set('views', './views'); // sets views directory for express app
 app.set('view engine', 'pug'); // sets the view engine for the express server to pug(can serve pug and html mixed)
 app.use(express.static('public')); // sets the static folder to 'public'; needed to call files in html and js
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false })); // Middleware to parse the body
 
 // this assigns the CSP header; this is used for the express server which needs apis allowed in order to speak with jsonbin and googlemapsapi
 app.use((req, res, next) => {
@@ -154,97 +153,6 @@ app.use((req, res, next) => {
 app.listen(1234, async () => {
     console.log("Server is running..."); //runs if server is running successfully
 });
-
-// Helper function to hash passwords; uses crypto library to generate a SHA256 hash
-function genHash(input){
-    return Buffer.from(crypto.createHash('sha256').update(input).digest('base32')).toString('hex').toUpperCase();
-}
-
-// Fetch user data from JSONbin; function from Professor Toporski
-const getJSONData = async () => {
-    const url = `https://api.jsonbin.io/v3/b/${binId}?meta=false`;
-
-    const response = await fetch(url, { 
-        method: 'GET',
-        headers: {
-            'X-Master-Key': apiKey,
-            'Content-Type': 'application/json'
-        }
-    });
-
-    if (response.status !== 200) {
-        throw new Error("Cannot fetch data");
-    }
-
-    const data = await response.json();
-
-    // Log the fetched data to inspect its structure
-    console.log('Fetched Data:', data);
-
-    // Ensure that the 'users' field exists in the response
-    if (!data.users) {
-        throw new Error('No users data found');
-    }
-
-    return data;  // Directly return the data without expecting a 'record' field
-};
-
-
-
-
-// Put updated data back to JSONbin; function from Professor Toporski
-const putJSONData = async (updatedData) => {
-    const url = `https://api.jsonbin.io/v3/b/${binId}`;
-
-    const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-            'X-Master-Key': apiKey,
-            'Content-Type': 'application/json',
-            'X-Bin-Versioning': 'false'
-        },
-        body: JSON.stringify(updatedData) // Convert data back to JSON string
-    });
-
-    if (response.status !== 200) {
-        throw new Error('Failed to update data');
-    }
-
-    return await response.json();
-};
-
-//fetch game data from json bin; modified version
-const getGameData = async () => {
-    const url = `https://api.jsonbin.io/v3/b/${gameBinId}?meta=false`;
-
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'X-Master-Key': apiKey,
-            'Content-Type': 'application/json'
-        }
-    });
-
-    if (response.status !== 200) {
-        throw new Error("Cannot fetch data");
-    }
-
-    const data = await response.json();
-
-    // Log the fetched data to inspect its structure
-    console.log('Fetched Data:', data);
-
-    // Ensure that the 'users' field exists in the response
-    if (!data.games) {
-        throw new Error('No users data found');
-    }
-
-    return data;  // Directly return the data without expecting a 'record' field
-};
-
-
-// Middleware to parse the body
-app.use(bodyParser.urlencoded({ extended: false }));
 
 // Session middleware
 app.use(session({
@@ -323,6 +231,24 @@ app.get('/games', async (req, res) => {
   }
 });
 
+//scores get
+app.get('/scores', (req, res) => {
+	//function to verify user is logged in
+    if (!req.session.user) {
+      console.log('Unable to access');
+res.redirect('/login');
+    } else {
+      const selectedGame = req.session.selectedGame;
+      const score = req.session.score;
+      if (!selectedGame) {
+        return res.status(400).send("No game selected /scores in app.mjs");
+      } else {
+        console.log(req.session.score);
+        res.render('scores', { selectedGame, score });
+      };
+    }
+});
+
 // get route to assist maps.js to get the selected
 app.get('/get-selected-game', (req, res) => {
   // Retrieve the selected game from the session or a global variable
@@ -355,20 +281,12 @@ app.post('/select-game', async (req, res) => {
 });
 
 //submit score post
-app.post('/submit-score', (req, res) => {
-    const { score } = req.body;
+app.post('/maps', (req, res) => {
+    const  score  = req.body.score;
 
     console.log('Received score:', score); // Log the received score
-
-    if (!score || typeof score !== 'number') {
-        return res.status(400).json({
-            message: 'Invalid score data received',
-            received: req.body // Log received data for debugging
-        });
-    }
-
-    // Do something with the score, like saving to a database
-    res.status(200).json({ message: 'Score submitted successfully' });
+      req.session.score = score;
+      res.json({ redirect: '/scores' });
 });
 
 
@@ -443,4 +361,92 @@ app.use((err, req, res, next) => { // errror handling for when a page cannot loa
     res.status(500).render('error', { message: err.message });
 });
 
+
+
+// Helper function to hash passwords; uses crypto library to generate a SHA256 hash
+function genHash(input){
+  return Buffer.from(crypto.createHash('sha256').update(input).digest('base32')).toString('hex').toUpperCase();
+}
+
+// Fetch user data from JSONbin; function from Professor Toporski
+const getJSONData = async () => {
+  const url = `https://api.jsonbin.io/v3/b/${binId}?meta=false`;
+
+  const response = await fetch(url, { 
+      method: 'GET',
+      headers: {
+          'X-Master-Key': apiKey,
+          'Content-Type': 'application/json'
+      }
+  });
+
+  if (response.status !== 200) {
+      throw new Error("Cannot fetch data");
+  }
+
+  const data = await response.json();
+
+  // Log the fetched data to inspect its structure
+  console.log('Fetched Data:', data);
+
+  // Ensure that the 'users' field exists in the response
+  if (!data.users) {
+      throw new Error('No users data found');
+  }
+
+  return data;  // Directly return the data without expecting a 'record' field
+};
+
+
+
+
+// Put updated data back to JSONbin; function from Professor Toporski
+const putJSONData = async (updatedData) => {
+  const url = `https://api.jsonbin.io/v3/b/${binId}`;
+
+  const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+          'X-Master-Key': apiKey,
+          'Content-Type': 'application/json',
+          'X-Bin-Versioning': 'false'
+      },
+      body: JSON.stringify(updatedData) // Convert data back to JSON string
+  });
+
+  if (response.status !== 200) {
+      throw new Error('Failed to update data');
+  }
+
+  return await response.json();
+};
+
+//fetch game data from json bin; modified version
+const getGameData = async () => {
+  const url = `https://api.jsonbin.io/v3/b/${gameBinId}?meta=false`;
+
+  const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+          'X-Master-Key': apiKey,
+          'Content-Type': 'application/json'
+      }
+  });
+
+  if (response.status !== 200) {
+      throw new Error("Cannot fetch data");
+  }
+
+  const data = await response.json();
+
+  // Log the fetched data to inspect its structure
+  console.log('Fetched Data:', data);
+
+  // Ensure that the 'users' field exists in the response
+  if (!data.games) {
+      throw new Error('No users data found');
+  }
+
+  return data;  // Directly return the data without expecting a 'record' field
+};
 

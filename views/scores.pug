@@ -1,9 +1,13 @@
 html
   head
-    title Game Score
+    style 
+      include styles.css
+    title SCORE
   body
     h1 Your Total Score
-    p#finalScore Score: 0
+    if selectedGame
+      p Selected Game: #{selectedGame._id}: #{selectedGame.description} 
+      p <h3 id="totalscore">Total Score: #{score}</h3>
     a(href="/games") Play Again
-    script.
-      document.getElementById("finalScore").textContent = "Score: " + localStorage.getItem("finalScore");
+
+    script(src="/scores.js")

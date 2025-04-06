@@ -138,7 +138,6 @@ async function initMap() {
     
         // Calculate score
         const score = calculateScore(guessPosition, actualPosition);
-        document.getElementById("scoreDisplay").innerText = `Previous Round Score: ${score}`;
         totalscore = totalscore + score;
         console.log("Calculated score:", score);
         console.log("Total score before submitting:", totalscore);
@@ -153,28 +152,8 @@ async function initMap() {
     
             initMap(); // Reload the map for the next round
         } else {
-            // Check if the total score is a valid number
-            if (typeof totalscore !== 'number') {
-                console.error("Invalid total score:", totalscore);
-                return;
-            }
-            console.log("Payload being sent:", JSON.stringify({ score: totalscore }));
-
-            // Submit the total score to the backend
-            fetch('/submit-score', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ score: totalscore }) // Ensure correct JSON structure
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Score submitted successfully:', data);
-                // Optionally, redirect or show a success message
-                // window.location.href = "/games"; // Navigate after submission
-            })
-            .catch(error => console.error('Error submitting score:', error));
+            postscore(totalscore);
+            return;
         }
     });
 
@@ -330,9 +309,48 @@ function calculateScore(guess, actual) {
   const distance = R * c; // Distance in km
   
   console.log(`Calculated Distance: ${distance} km`); // Debugging
+    // exponential version return Math.max(0, Math.round(5000 * Math.exp(-distance / 200)));
 
-  return Math.max(0, Math.round(5000 - distance * 100));
-  // exponential version return Math.max(0, Math.round(5000 * Math.exp(-distance / 200)));
+  const lol = Math.max(0, Math.round(5000 - distance * 100));
+
+  document.getElementById("scoreDisplay").innerText = `Previous Round Score: ${lol} | Previous Round Distance ${distance.toFixed(2)} Km`;
+
+  return (Math.max(0, Math.round(5000 - distance * 100)))
 
 }
 
+const postscore = async (totalscore) => {
+            // Check if the total score is a valid number
+    if (typeof totalscore !== 'number') {
+        console.error("Invalid total score:", totalscore);
+        return;
+    }
+   const score = JSON.rawJSON(totalscore);
+    try {
+        fetch('/maps', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ score: totalscore })
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.redirect) {
+              window.location.href = data.redirect; // Now the browser will go to /scores
+            }
+          });
+          
+    } catch (error) {
+        console.error("Error uploading scores:", error);
+    }
+};
+/*         const scores = document.querySelector('#scores')
+        score => {
+            const form = document.createElement('form');
+            form.action = '/maps';
+            form.method = 'POST';
+            form.innerHTML = `
+                <input type="hidden" name="totalscore" value="${totalscore}">
+            `;
+            scores.appendChild(form);
+        }
+        */
