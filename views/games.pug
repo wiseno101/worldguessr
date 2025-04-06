@@ -11,10 +11,9 @@ html
     main
       h1.form-title Games List
       nav.home-nav
-        ul(id="games-list")
+        ul#games-list
           each game in games
             li
               form(action="/select-game", method="POST")
                 input(type="hidden", name="gameId", value=game._id)
                 input(type="submit", value=game._id + ': ' + game.description)
-    script(src="games.js")
