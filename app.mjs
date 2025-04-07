@@ -135,18 +135,19 @@ app.use(bodyParser.urlencoded({ extended: false })); // Middleware to parse the 
 
 // this assigns the CSP header; this is used for the express server which needs apis allowed in order to speak with jsonbin and googlemapsapi
 app.use((req, res, next) => {
-    res.setHeader(
-        "Content-Security-Policy",
-        "default-src 'self'; " +
-        "script-src 'self' https://maps.googleapis.com https://cdn.jsdelivr.net; " +  // Allow Google Maps API and WebfontLoader script
-        "script-src-elem 'self' https://maps.googleapis.com https://cdn.jsdelivr.net; " +  // Allow external script elements (for WebfontLoader)
-        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +  // Allow stylesheets from Google Fonts
-        "img-src 'self' data: https://maps.gstatic.com https://maps.googleapis.com https://streetviewpixels-pa.googleapis.com/; " +  
-        "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; " +  // Allow fonts from Google Fonts and CDN
-        "connect-src 'self' https://api.jsonbin.io https://maps.googleapis.com; "  // Allow connections to JSONbin and Google Maps API
-    );
-    next();
+  res.setHeader(
+      "Content-Security-Policy",
+      "default-src 'self'; " +
+      "script-src 'self' https://maps.googleapis.com https://cdn.jsdelivr.net; " +
+      "script-src-elem 'self' https://maps.googleapis.com https://cdn.jsdelivr.net; " +
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+      "img-src 'self' data: https://maps.gstatic.com https://maps.googleapis.com https://streetviewpixels-pa.googleapis.com https://lh3.ggpht.com; " +
+      "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; " +
+      "connect-src 'self' https://api.jsonbin.io https://maps.googleapis.com;"
+  );
+  next();
 });
+
 
 
 //start express server on localhost:1234
