@@ -8,6 +8,8 @@ let totalscore = 0;
 let hasGuessed = null;
 let guessPosition = null; // Stores the guessed position
 let actualPosition = null; // Stores the actual game position
+let hint = null;
+let lol = null;
 //event listener to ensure DOM loads all HTML before executing js code
 window.addEventListener('DOMContentLoaded', (event) => {
   console.log('DOM fully loaded and parsed'); 
@@ -141,7 +143,7 @@ async function initMap() {
         const score = calculateScore(guessPosition, actualPosition);
         totalscore = totalscore + score;
         console.log("Calculated score:", score);
-        console.log("Total score before submitting:", totalscore);
+        console.log("Total score:", totalscore);
     
         // Proceed to next round
         if (round < totalRounds - 1) {
@@ -153,6 +155,7 @@ async function initMap() {
     
             initMap(); // Reload the map for the next round
         } else {
+            console.log("Total score before submitting:", totalscore);
             postscore(totalscore);
             return;
         }
@@ -162,6 +165,7 @@ async function initMap() {
      hintButton.disabled = false;
      hintButton.style.opacity = "1";
      hintButton.innerText = "Hint";
+     hint = null;
 
       // Update round display
       document.getElementById("roundDisplay").innerText = `Round: ${round + 1} / ${totalRounds}`;
@@ -300,9 +304,9 @@ function drawHintCircle() {
     hintButton.disabled = true;
     hintButton.style.opacity = "0.5";
     hintButton.innerText = "Hint Used";
-
+    hint = true;
     // Set radius of circle to 2500km
-    const radiusInKm = 2500;
+    const radiusInKm = 100;
     const radiusInMeters = radiusInKm * 1000;
 
     // Convert radius to degrees (approximate: 1 deg = 111km)
@@ -346,7 +350,10 @@ function closeMapModal() {
 document.getElementById('mapModal').style.display = 'none';
 document.body.style.overflow = 'auto'; // Re-enable scrolling when modal is closed
 }
+
+// calculate score function
 function calculateScore(guess, actual) {
+    lol = null;
   const toRad = (x) => (x * Math.PI) / 180;
   const R = 6371; // Earth radius in km
   const dLat = toRad(actual.lat - guess.lat);
@@ -361,11 +368,17 @@ function calculateScore(guess, actual) {
   console.log(`Calculated Distance: ${distance} km`); // Debugging
     // exponential version return Math.max(0, Math.round(5000 * Math.exp(-distance / 200)));
 
-  const lol = Math.max(0, Math.round(5000 - distance * 100));
 
-  document.getElementById("scoreDisplay").innerText = `Previous Round Score: ${lol} | Previous Round Distance ${distance.toFixed(2)} Km`;
+    if (hint){
+        lol = (Math.max(0, Math.round(5000 - distance * 100)))/2;
+        document.getElementById("scoreDisplay").innerText = `Previous Round Score(Halved because of Hint): ${lol} | Previous Round Distance ${distance.toFixed(2)} Km`;
 
-  return (Math.max(0, Math.round(5000 - distance * 100)))
+    } else {
+        lol = Math.max(0, Math.round(5000 - distance * 100));
+        document.getElementById("scoreDisplay").innerText = `Previous Round Score: ${lol} | Previous Round Distance ${distance.toFixed(2)} Km`;
+
+    }
+        return (lol);
 
 }
 
