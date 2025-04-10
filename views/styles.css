@@ -350,6 +350,13 @@ input[type=text], input[type=password], input[type=email]{
   right: 10px;
 }
 
+
+.scroll-container {
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
 button {
   background-color: green;
   color: white;

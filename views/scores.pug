@@ -8,6 +8,10 @@ html
     if selectedGame
       p Selected Game: #{selectedGame._id}: #{selectedGame.description} 
       p <h3 id="totalscore">Total Score: #{score}</h3>
-    a(href="/games") Play Again
+      
+      form(action="/scores", method="POST")
+        input(type="hidden", name="gameId", value=selectedGame._id)
+        input(type="hidden", name="score", value=score)
+        input(type="submit", value= 'play again?')
 
-    script(src="/scores.js")
+

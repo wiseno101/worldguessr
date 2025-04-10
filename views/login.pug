@@ -17,6 +17,9 @@ html
         input#pword(type="password", name="pword")
       .input
         input#submit(type="submit", value="Submit")
+    if msg
+      .error
+        p= msg
     <script src="getJSONData.js"></script>
     <script src="putJSONData.js"></script>
 

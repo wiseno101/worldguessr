@@ -25,6 +25,7 @@ import qString from 'querystring';  // Import 'querystring' module
 import bodyParser from 'body-parser'; // middleware for parsing bodys of info
 import session from 'express-session'; // session middleware that allows for express sessions
 import crypto from 'crypto'; // for simple encryption 'genHash' of passwords
+import e from 'express';
 
 const app = express(); //assigns 'app' to express server
 
@@ -260,6 +261,176 @@ app.get('/get-selected-game', (req, res) => {
   res.json(req.session.selectedGame);
 });
 
+//logout  page get
+app.get('/logout', (req, res) => {
+  //function to verify user is logged in
+  if (!req.session.user) {
+      console.log('Unable to access');
+      res.redirect('/login');
+  } else {
+      console.log("Accessing logout");
+      res.render('logout');
+  }
+});
+
+//logout post
+app.post('/logout', (req, res) => {
+
+  req.session.user = null;
+  res.redirect('/');
+
+});
+//post for saving game score
+app.post('/scores', express.urlencoded({ extended: false }), async (req, res) => {
+  try {
+    const final_score = parseInt(req.body.score);
+    const gameId = req.body.gameId;
+
+    const userData = await getJSONData();
+    const gameData = await getGameData();
+
+    const username = req.session.user.username;
+
+    const user = userData.users.find(u => u._id === username);
+    const game = gameData.games.find(g => g._id === gameId);
+
+    // Handle user scores
+    const userGame = user.games.find(g => g.game_id === gameId);
+    if (userGame) {
+      if (parseInt(userGame.score) < final_score) {
+        userGame.score = final_score.toString(); // Update user's score
+      }
+    } else {
+      user.games.push({ game_id: gameId, score: final_score.toString() }); // New game score for user
+    }
+
+    // Handle game scores
+    if (!game.scores) {
+      game.scores = []; // Make sure the scores array exists
+    }
+
+    const gameUserScore = game.scores.find(s => s.user === username);
+    if (gameUserScore) {
+      if (parseInt(gameUserScore.score) < final_score) {
+        gameUserScore.score = final_score.toString(); // Update score if it's higher
+      } else {
+        console.log('bro did worse');
+
+      }
+
+    } else {
+      game.scores.push({ user: username, score: final_score.toString() }); // Add new score entry
+    }
+
+    // Save both updates
+    await putJSONData(userData);
+    await putGameData(gameData);
+
+    // Clean up session
+    req.session.score = null;
+    req.session.selectedGame = null;
+
+    res.redirect('/games');
+  } catch (err) {
+    console.error(err);
+    res.render('scores', { msg: "Error registering scores" });
+  }
+});
+
+//create level post
+app.post('/create', express.urlencoded({ extended: false }), async (req, res) => {
+    try {
+        // Check for missing fields
+        if (!req.body._id || !req.body.description || !req.body.round1_lat || !req.body.round1_lng ||
+          !req.body.round2_lat || !req.body.round2_lng || !req.body.round3_lat || !req.body.round3_lng ||
+          !req.body.round4_lat || !req.body.round4_lng || !req.body.round5_lat || !req.body.round5_lng) {
+          return res.render('create', {
+              msg: "All fields are required.",
+              _id: req.body._id,
+              description: req.body.description,
+              round1_lat: req.body.round1_lat,
+              round1_lng: req.body.round1_lng,
+              round2_lat: req.body.round2_lat,
+              round2_lng: req.body.round2_lng,
+              round3_lat: req.body.round3_lat,
+              round3_lng: req.body.round3_lng,
+              round4_lat: req.body.round4_lat,
+              round4_lng: req.body.round4_lng,
+              round5_lat: req.body.round5_lat,
+              round5_lng: req.body.round5_lng
+          });
+      }
+		//create new user using userclass
+    const newGame = {
+      _id: req.body._id,
+      description: req.body.description,
+      scores: [
+        {
+          "user": null,
+          "score": null
+        }
+      ],
+      game_data: [
+        {
+          round: "1",
+          coordinates: {
+            lat: parseFloat(req.body.round1_lat),  // Convert to float
+            lng: parseFloat(req.body.round1_lng)   // Convert to float
+          }
+        },
+        {
+          round: "2",
+          coordinates: {
+            lat: parseFloat(req.body.round2_lat),
+            lng: parseFloat(req.body.round2_lng)
+          }
+        },
+        {
+          round: "3",
+          coordinates: {
+            lat: parseFloat(req.body.round3_lat),
+            lng: parseFloat(req.body.round3_lng)
+          }
+        },
+        {
+          round: "4",
+          coordinates: {
+            lat: parseFloat(req.body.round4_lat),
+            lng: parseFloat(req.body.round4_lng)
+          }
+        },
+        {
+          round: "5",
+          coordinates: {
+            lat: parseFloat(req.body.round5_lat),
+            lng: parseFloat(req.body.round5_lng)
+          }
+        }
+      ]
+  };
+
+
+        // Get current data from JSONbin
+        const data = await getGameData();
+
+        // Check if the username already exists; resets page if so
+        if (data.games.find(game => game._id === req.body._id)) {
+            return res.render('create', { msg: "Game already exists" });
+        }
+
+        // Add the new user to the users array
+        data.games.push(newGame);
+
+        // Update JSONbin with the new data
+        await putGameData(data);
+
+		//redirect to home page
+        res.redirect('home');
+    } catch (err) { // error handling
+        console.error(err);
+        res.render('create', { msg: "Error creating game" });
+    }
+});
 //post route to assist game select
 app.post('/select-game', async (req, res) => {
   const { gameId } = req.body;
@@ -285,22 +456,40 @@ app.post('/select-game', async (req, res) => {
 app.post('/maps', (req, res) => {
     const  score  = req.body.score;
 
+    if(!req.session.score){
     console.log('Received score:', score); // Log the received score
       req.session.score = score;
       res.json({ redirect: '/scores' });
+} else {
+  console.log('lol');
+}
+
 });
-
-
 
 //registerpage post
 app.post('/register', express.urlencoded({ extended: false }), async (req, res) => {
     try {
+        // Check for missing fields
+        // Check for missing fields
+        if (!req.body.uname || !req.body.pword || !req.body.email) {
+          return res.render('register', {
+              msg: "All fields are required.",
+              uname: req.body.uname,
+              email: req.body.email
+          });
+      }  
 		//create new user using userclass
         const newUser = {
             _id: req.body.uname,
             username: req.body.uname,
             email: req.body.email,
-            password: genHash(req.body.pword) // Hash the password
+            password: genHash(req.body.pword), // Hash the password
+            games: [
+              {
+                game_id: null,
+                score: null
+              }
+            ]
         };
 
         // Get current data from JSONbin
@@ -422,6 +611,27 @@ const putJSONData = async (updatedData) => {
   return await response.json();
 };
 
+// Put updated data back to JSONbin; function from Professor Toporski
+const putGameData = async (updatedData) => {
+  const url = `https://api.jsonbin.io/v3/b/${gameBinId}`;
+
+  const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+          'X-Master-Key': apiKey,
+          'Content-Type': 'application/json',
+          'X-Bin-Versioning': 'false'
+      },
+      body: JSON.stringify(updatedData) // Convert data back to JSON string
+  });
+
+  if (response.status !== 200) {
+      throw new Error('Failed to update data');
+  }
+
+  return await response.json();
+};
+
 //fetch game data from json bin; modified version
 const getGameData = async () => {
   const url = `https://api.jsonbin.io/v3/b/${gameBinId}?meta=false`;
@@ -443,9 +653,9 @@ const getGameData = async () => {
   // Log the fetched data to inspect its structure
   console.log('Fetched Data:', data);
 
-  // Ensure that the 'users' field exists in the response
+  // Ensure that the 'games' field exists in the response
   if (!data.games) {
-      throw new Error('No users data found');
+      throw new Error('No games data found');
   }
 
   return data;  // Directly return the data without expecting a 'record' field

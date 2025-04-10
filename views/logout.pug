@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+//- home page
+html
+  head
+    style 
+      include styles.css
+      
+title 
+
+main
+  h1.title.home-title.container you sure you wanna logout?
+
+body.container.home-background
+  nav.home-nav
+    ul
+      li 
+      a(href="/home") no i dont wanna
+      li 
+        form(action="/logout", method="POST")
+          input(type="submit", value= 'yes i do')

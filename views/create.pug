@@ -1,23 +1,59 @@
-<!DOCTYPE html>
-//- view for pulling up google maps api streetview with map modal on top
+doctype html
 html
   head
-    style 
+    title GAME CREATE
+    style
       include styles.css
-    title Google Maps Integration
+  body.form-background
+    main
+      h1.title.container.form-title Create Your Game
+      .scroll-container
+        form.form-container(method="POST")
+          .input
+            label.label(for="_id") game ID
+            input#_id(type="text", name="_id", value=_id)
+          .input
+            label.label(for="description") game description
+            input#description(type="text", name="description", value=description)
+          .input
+            label.label(for="round1_lat") round 1 lat
+            input(type="text", name="round1_lat", value=round1_lat)
+          .input
+            label.label(for="round1_lng") round 1 lng
+            input(type="text", name="round1_lng", value=round1_lng)
+          .input
+            label.label(for="round2_lat") round 2 lat
+            input(type="text", name="round2_lat", value=round2_lat)
+          .input
+            label.label(for="round2_lng") round 2 lng
+            input(type="text", name="round2_lng", value=round2_lng)
+          .input
+            label.label(for="round3_lat") round 3 lat
+            input(type="text", name="round3_lat", value=round3_lat)
+          .input
+            label.label(for="round3_lng") round 3 lng
+            input(type="text", name="round3_lng", value=round3_lng)
+          .input
+            label.label(for="round4_lat") round 4 lat
+            input(type="text", name="round4_lat", value=round4_lat)
+          .input
+            label.label(for="round4_lng") round 4 lng
+            input(type="text", name="round4_lng", value=round4_lng)
+          .input
+            label.label(for="round5_lat") round 5 lat
+            input(type="text", name="round5_lat", value=round5_lat)
+          .input
+            label.label(for="round5_lng") round 5 lng
+            input(type="text", name="round5_lng", value=round5_lng)
+          .input
+            input#submit(type="submit", value="Submit")
 
+        if msg
+          .error
+            p= msg
 
-  body
-    #pano
-
-    //- Modal HTML
-    #mapModal.modal(style="position: absolute;")
-      .modal-content
-        span.close &times;
-        #map
-
-    //- Trigger Modal Open Button
-    button#openModalButton(style="position: absolute;") Map
-
-    //- Load Google Maps API dynamically (handled in maps.js)
-    script(src="/create.js")
+        ul
+          li
+            a(href='/home') home
+          li
+            a(href='/login') Login
