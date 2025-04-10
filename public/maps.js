@@ -12,24 +12,25 @@ let actualPosition = null; // Stores the actual game position
 window.addEventListener('DOMContentLoaded', (event) => {
   console.log('DOM fully loaded and parsed'); 
 
-  // Add event listeners for the modal buttons after the DOM is fully loaded
+  // Add event listeners for the modal button + hint button after the DOM is fully loaded
 
  document.getElementById('openModalButton').addEventListener('click', openMapModal);
- 
-//refresh googlemapsAPI when modal is closed
+ document.getElementById('hintButton').addEventListener('click', drawHintCircle);
+
+ //refresh googlemapsAPI when modal is closed
  document.querySelector('.close').addEventListener('click', closeMapModal);
 
   loadGoogleMapsAPI(); 
-});
+ });
 
-// Fetch API key from JSONbin
-async function getAPIkey() {
+ // Fetch API key from JSONbin
+ async function getAPIkey() {
   console.log('Fetching API key...');
   try {
       const existingData = await getJSONData();
       console.log('API data fetched:', existingData);
 
-//ensure apikey is recieved
+ //ensure apikey is recieved
       if (existingData && existingData.api_keys && existingData.api_keys.length > 0) {
           const tempKey = existingData.api_keys[0].key;
           console.log('API Key:', tempKey);
@@ -44,7 +45,7 @@ async function getAPIkey() {
   }
 }
 
-// Load Google Maps API dynamically
+ // Load Google Maps API dynamically
 async function loadGoogleMapsAPI() {
   const apiKey = await getAPIkey();
   if (apiKey) {
@@ -156,6 +157,11 @@ async function initMap() {
             return;
         }
     });
+
+     //Enable the Hint button at start of each round
+     hintButton.disabled = false;
+     hintButton.style.opacity = "1";
+     hintButton.innerText = "Hint";
 
       // Update round display
       document.getElementById("roundDisplay").innerText = `Round: ${round + 1} / ${totalRounds}`;
@@ -284,6 +290,50 @@ async function putJSONData(updatedData) {
       throw error;
   }
 }
+//Hint Circle
+function drawHintCircle() {
+    if (!map || !actualPosition) {
+        alert("Map or actual position not initialized.");
+        return;
+    }
+    //disables the button when clicked & changes opacity and text
+    hintButton.disabled = true;
+    hintButton.style.opacity = "0.5";
+    hintButton.innerText = "Hint Used";
+
+    // Set radius of circle to 2500km
+    const radiusInKm = 2500;
+    const radiusInMeters = radiusInKm * 1000;
+
+    // Convert radius to degrees (approximate: 1 deg = 111km)
+    const radiusInDegrees = radiusInKm / 111;
+
+    // Generate a random angle and distance to offset the circle center
+    const randomAngle = Math.random() * 2 * Math.PI;
+    const randomDistance = Math.random() * radiusInDegrees;
+
+    // Offset the circle center from the actual location
+    const offsetLat = actualPosition.lat + (randomDistance * Math.cos(randomAngle));
+    const offsetLng = actualPosition.lng + (randomDistance * Math.sin(randomAngle)) / Math.cos(actualPosition.lat * Math.PI / 180);
+
+
+    // Draw the circle
+    new google.maps.Circle({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.7,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.15,
+        map,
+        center: { lat: offsetLat, lng: offsetLng },
+        radius: radiusInMeters,
+        clickable: false
+    });
+
+    console.log(`Hint circle drawn with radius ${radiusInKm} km`);
+
+}
+
 
 // Open map modal in the bottom-right corner
 function openMapModal() {
