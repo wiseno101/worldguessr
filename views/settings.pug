@@ -1,0 +1,60 @@
+doctype html
+html
+  head
+    title Change Password
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        padding: 2rem;
+        background-color: #f9f9f9;
+      }
+      h1 {
+        color: #333;
+      }
+      form {
+        background: #fff;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        width: 300px;
+      }
+      label {
+        display: block;
+        margin-top: 1rem;
+      }
+      input[type="password"] {
+        width: 100%;
+        padding: 0.5rem;
+        margin-top: 0.25rem;
+        box-sizing: border-box;
+      }
+      button {
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      p {
+        margin-top: 1rem;
+        color: green;
+      }
+  body
+    h1 Change Your Password
+
+    form(method="POST", action="/settings")
+      label(for="current") Current Password:
+      input(type="password", name="current", required)
+
+      label(for="new") New Password:
+      input(type="password", name="new", required)
+
+      button(type="submit") Change Password
+
+    if msg
+      p= msg
+    ul
+      li 
+      a(href="/home") home

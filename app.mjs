@@ -194,6 +194,26 @@ app.get('/home', (req, res) => {
     }
 });
 
+//about page get
+app.get('/about', (req, res) => {
+	//function to verify user is logged in
+    if (!req.session.user) {
+        console.log('Unable to access');
+        res.redirect('/login');
+    } else {
+        console.log("Accessing about page");
+        res.render('about');
+    }
+});
+
+//settings get
+app.get('/settings', (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+  res.render('settings');
+});
+
 // Maps route: Retrieve selected game from the session
 app.get('/maps', (req, res) => {
   const selectedGame = req.session.selectedGame;
@@ -272,6 +292,34 @@ app.get('/logout', (req, res) => {
       res.render('logout');
   }
 });
+
+//settings post
+app.post('/settings', async (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+
+  const { current, new: newPassword } = req.body;
+  const username = req.session.user.username;
+
+  try {
+    const data = await getJSONData();
+    const user = data.users.find(u => u._id === username);
+
+    if (!user || genHash(current) !== user.password) {
+      return res.render('settings', { msg: "Incorrect current password." });
+    }
+
+    user.password = genHash(newPassword);
+    await putJSONData(data);
+
+    res.render('settings', { msg: "Password successfully changed!" });
+  } catch (err) {
+    console.error(err);
+    res.render('settings', { msg: "Error updating password." });
+  }
+});
+
 
 //logout post
 app.post('/logout', (req, res) => {
