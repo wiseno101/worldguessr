@@ -1,19 +1,17 @@
 html
   head
-    style 
-      include styles.css
     title Game Selection
-  body.container.home-background
-    nav.home-nav
-      ul
-        li 
-          a(href="/home") home
-    main
-      h1.form-title Games List
-      nav.home-nav
-        ul#games-list
-          each game in games
+    link(rel="stylesheet", href="/styles.css")
+  body
+    .scroll-container
+      main
+        h1.form-title Games List
+        nav.home-nav
+          ul#games-list
+            each game in games
+              li
+                form(action="/select-game", method="POST")
+                  input(type="hidden", name="gameId", value=game._id)
+                  input(type="submit", value=game._id + ': ' + game.description)
             li
-              form(action="/select-game", method="POST")
-                input(type="hidden", name="gameId", value=game._id)
-                input(type="submit", value=game._id + ': ' + game.description)
+              a(href="/home") Home
