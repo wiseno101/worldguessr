@@ -304,10 +304,7 @@ app.get('/leaderboard', async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 6bbff4d7061e421cffba9ac51e23d26d480bb3f9
 //settings post
 app.post('/settings', async (req, res) => {
   if (!req.session.user) {

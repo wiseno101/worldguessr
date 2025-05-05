@@ -1,14 +1,4 @@
 doctype html
-<<<<<<< HEAD
-html
-  head
-    title Leaderboard
-    link(rel="stylesheet", href="/styles.css")
-  body
-    main.container
-      h1 Leaderboards
-
-=======
 html(lang="en")
   head
     meta(charset="UTF-8")
@@ -31,13 +21,13 @@ html(lang="en")
       body.leaderboard-background {
         position: relative;
         background: url('/imgs/login1.jpg') center/cover no-repeat;
-        background-attachment: fixed;  /* keep the image locked behind the overlay */
+        background-attachment: fixed;
       }
       body.leaderboard-background::before {
         content: '';
-        position: fixed;       /* ← fixed so it stays put over the whole viewport */
+        position: fixed;
         top: 0; left: 0;
-        width: 100vw; height: 100vh;  /* cover the entire viewport no matter the scroll */
+        width: 100vw; height: 100vh;
         background: rgba(0,0,0,0.7);
         z-index: 0;
       }
@@ -85,10 +75,9 @@ html(lang="en")
         font-size: 0.9rem;
         box-shadow: inset 0 0 6px #000;
       }
-      /* Distinct header colors */
-        thead th:nth-child(1) { background: #ff0066; }
-        thead th:nth-child(2) { background: #00ffcc; }
-        thead th:nth-child(3) { background: #ffcc00; }
+      thead th:nth-child(1) { background: #ff0066; }
+      thead th:nth-child(2) { background: #00ffcc; }
+      thead th:nth-child(3) { background: #ffcc00; }
 
       tbody tr {
         transition: background 0.2s;
@@ -112,16 +101,11 @@ html(lang="en")
   body.leaderboard-background
     main.container
       h1 Leaderboards
->>>>>>> 6bbff4d7061e421cffba9ac51e23d26d480bb3f9
       each game in games
         - const validScores = (game.scores || []).filter(s => s.user && s.score !== null);
         if validScores.length
           .game-leaderboard
-<<<<<<< HEAD
-            h2 #{game._id} - #{game.description}
-=======
             h2 #{game._id} – #{game.description}
->>>>>>> 6bbff4d7061e421cffba9ac51e23d26d480bb3f9
             table
               thead
                 tr
@@ -136,11 +120,10 @@ html(lang="en")
                     td #{score.user}
                     td #{score.score}
         else
-<<<<<<< HEAD
-          h2 #{game._id} - #{game.description}
-          p No scores yet.
-=======
           .game-leaderboard
             h2 #{game._id} – #{game.description}
             p.no-scores No scores yet.
->>>>>>> 6bbff4d7061e421cffba9ac51e23d26d480bb3f9
+        .settings-card
+      ul
+        li
+          a(href="/home") Home
