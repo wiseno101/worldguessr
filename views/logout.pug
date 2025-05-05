@@ -1,20 +1,78 @@
-<!DOCTYPE html>
-//- home page
-html
+doctype html
+html(lang="en")
   head
-    style 
-      include styles.css
-      
-title 
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Logout
+    //–– Inline cyber-punk CSS ––
+    style.
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-main
-  h1.title.home-title.container you sure you wanna logout?
+      /* Reset & base */
+      html, body {
+        margin: 0; padding: 0;
+        width: 100vw; height: 100vh;
+        overflow: hidden;
+        background: #121212;
+        font-family: 'Orbitron', sans-serif;
+        color: #fff;
+      }
 
-body.container.home-background
-  nav.home-nav
-    ul
-      li 
-      a(href="/home") no i dont wanna
-      li 
-        form(action="/logout", method="POST")
-          input(type="submit", value= 'yes i do')
+      /* Centered neon card */
+      .logout-card {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0,0,0,0.85);
+        padding: 3rem;
+        border-radius: 12px;
+        box-shadow: 0 0 30px #0ff;
+        text-align: center;
+      }
+
+      /* Heading */
+      .logout-card h1 {
+        margin: 0 0 2rem;
+        font-size: 2.5rem;
+        color: #0ff;
+        text-shadow: 0 0 8px #0ff, 0 0 16px #0ff;
+      }
+
+      /* Gradient keyframes */
+      @keyframes gradientAnim {
+        0%   { background-position:   0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position:   0% 50%; }
+      }
+
+      /* Equal-width buttons, stacked */
+      .logout-card a,
+      .logout-card input[type="submit"] {
+        display: block;
+        width: 240px;           /* fixed equal width */
+        margin: 1.5rem auto;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #000;
+        background: linear-gradient(45deg, #ff0066, #ffcc00, #00ffcc, #ff0066);
+        background-size: 400% 400%;
+        animation: gradientAnim 6s ease infinite;
+        border: none;
+        border-radius: 30px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .logout-card a:hover,
+      .logout-card input[type="submit"]:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px #ff0066;
+      }
+
+  body.form-background
+    .logout-card
+      h1 You sure you wanna logout?
+      a(href="/home") No, I don't wanna
+      form(action="/logout", method="POST")
+        input(type="submit", value="Yes, I do")

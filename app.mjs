@@ -293,6 +293,17 @@ app.get('/logout', (req, res) => {
   }
 });
 
+//leaderboard get
+app.get('/leaderboard', async (req, res) => {
+  try {
+    const gameData = await getGameData();
+    res.render('leaderboard', { games: gameData.games });
+  } catch (err) {
+    console.error('Error fetching leaderboard data:', err);
+    res.status(500).send('Failed to load leaderboard');
+  }
+});
+
 //settings post
 app.post('/settings', async (req, res) => {
   if (!req.session.user) {

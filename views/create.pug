@@ -1,59 +1,210 @@
 doctype html
-html
+html(lang="en")
   head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
     title GAME CREATE
-    style
-      include styles.css
+    //–– Inline cyber-punk CSS with grid form ––
+    style.
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+      /* Reset & base */
+      html, body {
+        margin: 0; padding: 0;
+        width: 100vw; height: 100vh;
+        overflow: hidden;
+        font-family: 'Orbitron', sans-serif;
+        color: #fff;
+      }
+
+      /* Background + overlay */
+      body.form-background {
+        position: relative;
+        background: url('/imgs/login1.jpg') center/cover no-repeat;
+      }
+      body.form-background::before {
+        content: '';
+        position: absolute;
+        top:0; left:0; right:0; bottom:0;
+        background: rgba(0,0,0,0.7);
+        z-index: 0;
+      }
+
+      /* Main container */
+      main {
+        position: relative;
+        z-index: 1;
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 1rem;
+        text-align: center;
+      }
+
+      /* Title */
+      .form-title {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        color: #0ff;
+        text-shadow: 0 0 8px #0ff, 0 0 16px #0ff;
+      }
+
+      /* Scroll area unneeded—grid will fit */
+      .scroll-container {
+        /* removed height limit */
+      }
+
+      /* Form grid */
+      .form-container {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem 2rem;
+        background: rgba(0,0,0,0.85);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 0 20px #0ff;
+        box-sizing: border-box;
+      }
+
+      /* Span the submit button and links across both columns */
+      .form-container > #submit,
+      .form-container > .error,
+      .form-container > ul {
+        grid-column: 1 / -1;
+      }
+
+      /* Input groups */
+      .input {
+        display: flex;
+        flex-direction: column;
+      }
+      .input label {
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+        text-transform: uppercase;
+        color: #0ff;
+      }
+      .input input {
+        padding: 0.75rem;
+        font-size: 1rem;
+        border: 2px solid #0ff;
+        border-radius: 4px;
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .input input:focus {
+        outline: none;
+        border-color: #ff0066;
+        box-shadow: 0 0 10px #ff0066;
+      }
+
+      /* Submit button */
+      @keyframes gradientAnim {
+        0%   { background-position:   0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position:   0% 50%; }
+      }
+      input#submit {
+        width: 200px;
+        margin: 1rem auto;
+        padding: 0.75rem;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #000;
+        background: linear-gradient(45deg, #ff0066, #ffcc00, #00ffcc, #ff0066);
+        background-size: 400% 400%;
+        animation: gradientAnim 6s ease infinite;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      input#submit:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px #ff0066;
+      }
+
+      /* Error */
+      .error p {
+        color: #ff4444;
+        margin-top: 1rem;
+        font-size: 0.9rem;
+      }
+
+      /* Footer links */
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 2rem 0 0;
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+      }
+      ul li a {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        color: #0ff;
+        text-decoration: none;
+        text-transform: uppercase;
+        border: 2px solid #0ff;
+        border-radius: 4px;
+        box-shadow: 0 0 8px #0ff;
+        transition: background 0.2s, color 0.2s;
+      }
+      ul li a:hover {
+        background: #0ff;
+        color: #000;
+      }
+
   body.form-background
     main
-      h1.title.container.form-title Create Your Game
+      h1.form-title Create Your Game
       .scroll-container
         form.form-container(method="POST")
           .input
-            label.label(for="_id") game ID
+            label(for="_id") Game ID
             input#_id(type="text", name="_id", value=_id)
           .input
-            label.label(for="description") game description
+            label(for="description") Description
             input#description(type="text", name="description", value=description)
           .input
-            label.label(for="round1_lat") round 1 lat
+            label(for="round1_lat") Round 1 Lat
             input(type="text", name="round1_lat", value=round1_lat)
           .input
-            label.label(for="round1_lng") round 1 lng
+            label(for="round1_lng") Round 1 Lng
             input(type="text", name="round1_lng", value=round1_lng)
           .input
-            label.label(for="round2_lat") round 2 lat
+            label(for="round2_lat") Round 2 Lat
             input(type="text", name="round2_lat", value=round2_lat)
           .input
-            label.label(for="round2_lng") round 2 lng
+            label(for="round2_lng") Round 2 Lng
             input(type="text", name="round2_lng", value=round2_lng)
           .input
-            label.label(for="round3_lat") round 3 lat
+            label(for="round3_lat") Round 3 Lat
             input(type="text", name="round3_lat", value=round3_lat)
           .input
-            label.label(for="round3_lng") round 3 lng
+            label(for="round3_lng") Round 3 Lng
             input(type="text", name="round3_lng", value=round3_lng)
           .input
-            label.label(for="round4_lat") round 4 lat
+            label(for="round4_lat") Round 4 Lat
             input(type="text", name="round4_lat", value=round4_lat)
           .input
-            label.label(for="round4_lng") round 4 lng
+            label(for="round4_lng") Round 4 Lng
             input(type="text", name="round4_lng", value=round4_lng)
           .input
-            label.label(for="round5_lat") round 5 lat
+            label(for="round5_lat") Round 5 Lat
             input(type="text", name="round5_lat", value=round5_lat)
           .input
-            label.label(for="round5_lng") round 5 lng
+            label(for="round5_lng") Round 5 Lng
             input(type="text", name="round5_lng", value=round5_lng)
-          .input
-            input#submit(type="submit", value="Submit")
-
+          input#submit(type="submit", value="Submit")
         if msg
           .error
             p= msg
-
         ul
           li
-            a(href='/home') home
+            a(href='/home') Home
           li
             a(href='/login') Login

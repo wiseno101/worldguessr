@@ -1,27 +1,115 @@
 doctype html
-//- home page
-html
+html(lang="en")
   head
-    title World Guesser - About
-    link(rel="stylesheet", href="styles.css")
-  body.container.home-background
-    nav.home-nav
-      h1 WORLD GUESSER PROJECT
-      h2 Senior Computing and Informatics Capstone
-      p
-        | Lead Developer: Noah Wise
-      p
-        | Lead HTML and CSS: Nisargsinh Vaghela
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title WorldGuessr – About
+    //–– Inline cyber-punk CSS ––
+    style.
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+      /* Reset & base */
+      html, body {
+        margin: 0; padding: 0;
+        width: 100vw; height: 100vh;
+        overflow: auto;
+        font-family: 'Orbitron', sans-serif;
+        color: #fff;
+      }
+
+      /* Background + overlay */
+      body.home-background {
+        position: relative;
+        background: url('/imgs/login1.jpg') center/cover no-repeat;
+      }
+      body.home-background::before {
+        content: '';
+        position: absolute;
+        top:0; left:0; right:0; bottom:0;
+        background: rgba(0,0,0,0.7);
+        z-index: 0;
+      }
+
+      /* Content card */
+      .about-card {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+        margin: 3rem auto;
+        background: rgba(0,0,0,0.85);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 0 30px #0ff;
+        color: #fff;
+      }
+
+      /* Headings */
+      .about-card h1,
+      .about-card h2 {
+        margin: 0 0 1rem;
+        text-align: center;
+        color: #0ff;
+        text-shadow: 0 0 8px #0ff, 0 0 16px #0ff;
+      }
+      .about-card h1 { font-size: 3rem; }
+      .about-card h2 { font-size: 1.5rem; }
+
+      /* Paragraphs & lists */
+      .about-card p {
+        margin: 0.75rem 0;
+        line-height: 1.4;
+      }
+      .about-card ul {
+        margin: 0.5rem 0 1rem;
+        padding-left: 1.25rem;
+      }
+      .about-card ul li {
+        margin-bottom: 0.5rem;
+      }
+
+      /* Footer link */
+      .about-card a.home-link {
+        display: inline-block;
+        margin-top: 1.5rem;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #000;
+        background: linear-gradient(45deg, #ff0066, #ffcc00, #00ffcc, #ff0066);
+        background-size: 400% 400%;
+        animation: gradientAnim 6s ease infinite;
+        border: none;
+        border-radius: 30px;
+        text-decoration: none;
+        box-shadow: inset 0 0 8px #ff0066, 0 0 20px #0ff;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .about-card a.home-link:hover {
+        transform: translateY(-2px);
+        box-shadow: inset 0 0 16px #ff0066, 0 0 30px #0ff;
+      }
+
+      /* Gradient keyframes */
+      @keyframes gradientAnim {
+        0%   { background-position:   0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position:   0% 50%; }
+      }
+
+  body.home-background
+    .about-card
+      h1 WORLD GUESSR PROJECT
+      h2 Senior Computing &amp; Informatics Capstone
+      p Lead Developer: Noah Wise
+      p Lead HTML &amp; CSS: Nisargsinh Vaghela
       p Mid-Level Developers:
       ul
         li Rad Pena
         li Hunter Rolph
         li Kyle Ernst
       p Description:
-      p World guessing game developed in JavaScript.
-      p Server runs on localport:1234 using a local Express server.
-      p JSONbin is used for the database and consists of two Bins.
-      p Pug and HTML are used for the markup language.
-    ul
-      li 
-      a(href="/home") home
+      p World guessing game built in JavaScript.
+      p Server runs on <code>localhost:1234</code> via Express.
+      p Data stored in JSONbin (two bins).
+      p Markup done in Pug &amp; HTML.
+      a.home-link(href="/home") Home
