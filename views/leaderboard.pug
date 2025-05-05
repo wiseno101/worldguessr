@@ -1,0 +1,30 @@
+doctype html
+html
+  head
+    title Leaderboard
+    link(rel="stylesheet", href="/styles.css")
+  body
+    main.container
+      h1 Leaderboards
+
+      each game in games
+        - const validScores = (game.scores || []).filter(s => s.user && s.score !== null);
+        if validScores.length
+          .game-leaderboard
+            h2 #{game._id} - #{game.description}
+            table
+              thead
+                tr
+                  th Rank
+                  th User
+                  th Score
+              tbody
+                - const sorted = validScores.sort((a, b) => parseInt(b.score) - parseInt(a.score));
+                each score, index in sorted
+                  tr
+                    td #{index + 1}
+                    td #{score.user}
+                    td #{score.score}
+        else
+          h2 #{game._id} - #{game.description}
+          p No scores yet.
