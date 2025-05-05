@@ -1,36 +1,185 @@
-<!DOCTYPE html>
+doctype html
 //- view for pulling up googlemapsapi streetview with map modal on top
-html
-  head
-    style 
-      include styles.css
-    title Google Maps Integration
-  body
+html(lang="en")
+
+title Google Maps Integration
+  body.map-page
     h1 Google Maps with Street View
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title WorldGuessr
+    //–– Inline CSS ––
+    style.
+       /* Reset & base */
+      html, body {
+        margin: 0; padding: 0;
+        width: 100vw; height: 100vh;
+        overflow: hidden;
+        background: #000;
+        font-family: 'Orbitron', sans-serif;
+        color: #fff;
+      }
+
+      /* Neon branding top-left */
+      .branding {
+        position: absolute;
+        top: 1rem; left: 1rem;
+        background: rgba(230, 17, 17, 0.6);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        box-shadow: 0 0 10px #0ff;
+        z-index: 2;
+        
+      }
+      .branding h1 {
+        margin: 0;
+        font-size: 2rem;
+        color: #0ff;
+        text-shadow: 0 0 8px #0ff, 0 0 16px #0ff;
+      }
+      .branding p {
+        margin: 0.25rem 0 0;
+        font-size: 0.9rem;
+        opacity: 0.8;
+      }
+
+      /* 1) Full-screen Street View */
+      #pano {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 1;
+      }
+
+      /* 2) Bottom-center cyber-punk controls */
+      .controls {
+        position: absolute;
+        bottom: 2rem; left: 50%;
+        transform: translateX(-50%);
+        display: flex; gap: 1rem;
+        z-index: 2;
+      }
+      .controls h2,
+      .controls h3 {
+        margin: 0;
+        padding: 0.5rem 1rem;
+        background: rgba(0,0,0,0.6);
+        border-radius: 4px;
+        font-weight: normal;
+        color: #fff;
+      }
+      .controls button {
+        min-width: 180px;
+        padding: 0.75rem 1rem;
+        background: rgba(0,0,0,0.6);
+        border: 2px solid #f0f;
+        border-radius: 30px;
+        color: #f0f;
+        text-shadow: 0 0 6px #f0f;
+        box-shadow:
+          inset 0 0 10px #f0f,
+          0 0 20px #0ff;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .controls button:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          inset 0 0 20px #f0f,
+          0 0 30px #0ff;
+      }
+      /* hide Open Map Modal button */
+      #openModalButton {
+        display: none !important;
+      }
+
+      /* 3) Guess-map pinned bottom-right */
+      #mapModal.modal {
+        display: block !important;
+        position: absolute;
+        bottom: 1.5rem; right: 1.5rem;
+        width: 320px; height: 320px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px #0ff;
+        z-index: 2;
+        transform: none;
+      }
+      #mapModal .modal-content {
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      #map {
+        width: 100%; height: 100%;
+      }
+
+
+      /* 4) Top-left game title overlay */
+      .branding {
+        position: absolute;
+        top: 1rem; left: 1rem;
+        background: rgba(0,0,0,0.7);
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        z-index: 2;
+      }
+      .branding h1 {
+        margin: 0; font-size: 1.4rem;
+      }
+      .branding p {
+        margin: 0.25rem 0 0;
+        font-size: 0.9rem;
+        opacity: 0.85;
+      }
+
+     
+    //–– 2) Bottom-center controls ––
+    .controls
+      h2#roundDisplay   Round: #{currentRound} / 5
+      h3#totalscore     Total Score: #{totalScore}
+      button#submitGuess(type="button") Submit Guess
+      button#hintButton(type="button") Hint
+      button#openModalButton(type="button") Open Map Modal
+      
+    title Google Maps Integration
+  body.map-page
+    
+
     if selectedGame
-      p Selected Game: #{selectedGame._id}: #{selectedGame.description} 
-      p <h2 id="roundDisplay">Round: 1 / 5</h2>
-      p <h3 id="totalscore">Total Score: 0</h3>
-      p <h4 id="scoreDisplay"></h4>
+      h4#scoreDisplay
 
-
-
-      #pano(style="height: 650px; width: 100%; margin-top: 10px;")
-
-      button#openModalButton Open Map Modal
-      <button id="submitGuess">Submit Guess</button>
-      <button id="hintButton">Hint</button>
+      //–– 1) Full-screen Street View –– 
+      #pano
 
     else
       p No game selected! maps.pug
-    
 
+    //–– 3) Always-on guess-map ––
     #mapModal.modal
       .modal-content
-        span.close &times;
-        #map(style="height: 300px; width: 100%;")
+        span.close(style="display:none;") &times;
+        #map
 
 
+    //–– 4) Top-left title + game info ––
+    .branding
+      h1 WorldGuessr
+      if selectedGame
+        p Selected Game: #{selectedGame._id} – #{selectedGame.description}
+      else
+        p No game selected!
 
 
+    //–– Load your existing maps.js unchanged ––
     script(src="/maps.js")
+    //–– Extra binding to fire submitGuess() no matter what ––
+    script.
+      window.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('submitGuess');
+        if (btn && typeof submitGuess === 'function') {
+          btn.addEventListener('click', submitGuess);
+        }
+      });

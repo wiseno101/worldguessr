@@ -1,18 +1,108 @@
-<!DOCTYPE html>
-html
+doctype html
+html(lang="en")
   head
-    style 
-      include styles.css
-      
-title Login Page
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title WorldGuessr
+    //–– Inline cyber-punk background + styles ––
+    style.
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-main
-  h1.title.main-title.container world guessr
+      /* Full-screen reset & base font */
+      html, body {
+        margin: 0; padding: 0;
+        width: 100vw; height: 100vh;
+        overflow: hidden;
+        background: #000;
+        font-family: 'Orbitron', sans-serif;
+        color: #fff;
+      }
 
-body.container.background
-  nav.main-nav
-    ul
-      li
-        a(href='/login') LOGIN
-      li
-        a(href='/register') REGISTER
+      /* 1) Background image + dark overlay */
+      body.background {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: url(/imgs/login1.jpg)
+                    center/cover no-repeat;
+      }
+      body.background::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.6);
+      }
+
+      /* 2) Container to lift content above overlay */
+      .container {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+      }
+
+      /* 3) Neon “WorldGuessr” title */
+      .main-title {
+        margin: 0;
+        font-size: 4rem;
+        text-transform: uppercase;
+        color: #0ff;
+        text-shadow: 
+          0 0 8px #0ff,
+          0 0 16px #0ff,
+          0 0 24px #0ff;
+      }
+
+      /* 4) Nav styling */
+      .main-nav {
+        margin-top: 2rem;
+      }
+      .main-nav ul {
+        list-style: none;
+        padding: 0; margin: 0;
+        display: flex;
+        gap: 2rem;
+      }
+
+      /* 5) Animated gradient buttons */
+      .main-nav a {
+        display: inline-block;
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #000;
+        background: linear-gradient(45deg, #ff0066, #ffcc00, #00ffcc, #ff0066);
+        background-size: 400% 400%;
+        animation: gradientAnim 8s ease infinite;
+        border: none;
+        border-radius: 30px;
+        text-decoration: none;
+        box-shadow:
+          inset 0 0 8px #ff0066,
+          0 0 20px #0ff;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .main-nav a:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          inset 0 0 16px #ff0066,
+          0 0 30px #0ff;
+      }
+
+      /* 6) Keyframes for gradient */
+      @keyframes gradientAnim {
+        0%   { background-position:   0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position:   0% 50%; }
+      }
+
+  body.background
+    .container
+      h1.main-title WorldGuessr
+      nav.main-nav
+        ul
+          li
+            a(href='/login') LOGIN
+          li
+            a(href='/register') REGISTER

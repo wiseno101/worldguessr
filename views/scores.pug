@@ -1,17 +1,92 @@
-html
+doctype html
+html(lang="en")
   head
-    style 
-      include styles.css
-    title SCORE
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Your Total Score
+    //–– Inline “gaming” CSS ––
+    style.
+      /* Import the sci-fi font */
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+      /* 1) Fill the screen and center all content */
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #121212;
+        font-family: 'Orbitron', sans-serif;
+        color: #fff;
+      }
+
+      /* 2) The score card */
+      .score-card {
+        background: rgba(0, 0, 0, 0.8);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+        text-align: center;
+        min-width: 320px;
+      }
+
+      /* 3) Big neon title */
+      .score-card h1 {
+        margin: 0 0 1rem;
+        font-size: 2.5rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #0ff;
+        text-shadow: 0 0 10px #0ff;
+      }
+
+      /* 4) Details text */
+      .score-card .details p {
+        margin: 0 0 0.5rem;
+        font-size: 1rem;
+        opacity: 0.8;
+      }
+
+      /* 5) The big green score */
+      .score-card .details h2 {
+        margin: 0;
+        font-size: 4rem;
+        color: #0f0;
+        text-shadow: 0 0 10px #0f0;
+      }
+
+      /* 6) Play again button */
+      .play-again {
+        margin-top: 1.5rem;
+        background: linear-gradient(45deg, #ff0066, #ffcc00);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        color: #000;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .play-again:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(255, 204, 0, 0.7);
+      }
+
   body
-    h1 Your Total Score
-    if selectedGame
-      p Selected Game: #{selectedGame._id}: #{selectedGame.description} 
-      p <h3 id="totalscore">Total Score: #{score}</h3>
-      
-      form(action="/scores", method="POST")
-        input(type="hidden", name="gameId", value=selectedGame._id)
-        input(type="hidden", name="score", value=score)
-        input(type="submit", value= 'play again?')
+    .score-card
+      h1 Your Total Score
 
+      if selectedGame
+        .details
+          p Selected Game: #{selectedGame._id} – #{selectedGame.description}
+          h2#totalscore #{score}
 
+        form(action="/scores" method="POST")
+          input(type="hidden" name="gameId" value=selectedGame._id)
+          input(type="hidden" name="score" value=score)
+          button.play-again(type="submit") Play Again?
+      else
+        p No game selected!

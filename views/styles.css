@@ -28,7 +28,7 @@ html, body{
 }
 
 .background{
-    background-image: url(/imgs/hills.gif);
+    background-image: url(/imgs/login1.png);
     background-repeat: no-repeat;
     background-size: cover;
     min-height: 100%;
@@ -371,3 +371,4 @@ button {
 button:hover {
   background-color: darkgreen;
 }
+

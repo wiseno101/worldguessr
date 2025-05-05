@@ -1,15 +1,23 @@
-<!DOCTYPE html>
-//- home page
-html
+doctype html
+html(lang="en")
   head
-    style 
-      include styles.css
-      
-title 
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title WorldGuessr Home
+    //–– Inline cyber-punk CSS ––
+    style.
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-main
-  h1.title.home-title.container world guessr
+      /* reset & base */
+      html, body {
+        margin: 0; padding: 0;
+        width: 100vw; height: 100vh;
+        overflow: hidden;
+        font-family: 'Orbitron', sans-serif;
+        color: #fff;
+      }
 
+<<<<<<< HEAD
 body.container.home-background
   nav.home-nav
     ul
@@ -25,3 +33,103 @@ body.container.home-background
         a(href="/about") About        
       li 
       a(href="/logout") logout
+=======
+      /* full-screen background + overlay */
+      body.home-background {
+        position: relative;
+        background: url('/imgs/login1.jpg') center/cover no-repeat;
+      }
+      body.home-background::before {
+        content: '';
+        position: absolute;
+        top:0; left:0; right:0; bottom:0;
+        background: rgba(0,0,0,0.6);
+        z-index: 0;
+      }
+
+      /* center container for title */
+      .container {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        padding-top: 1.5rem;
+      }
+
+      /* neon main title slightly smaller */
+      .main-title {
+        font-size: 3rem; /* down from 4rem */
+        margin: 0 0 1rem;
+        color: #0ff;
+        text-shadow:
+          0 0 6px #0ff,
+          0 0 12px #0ff,
+          0 0 18px #0ff;
+      }
+
+      /* center vertical nav */
+      nav.home-nav {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+      }
+      nav.home-nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem; /* reduced gap */
+      }
+
+      /* slightly smaller buttons */
+      nav.home-nav a {
+        display: block;
+        padding: 1rem 2rem;   /* down from 1.5/3rem */
+        font-size: 1.1rem;    /* down from 1.5rem */
+        font-weight: bold;
+        color: #000;
+        background: linear-gradient(45deg, #ff0066, #ffcc00, #00ffcc, #ff0066);
+        background-size: 400% 400%;
+        animation: gradientAnim 8s ease infinite;
+        border-radius: 30px;
+        text-decoration: none;
+        box-shadow:
+          inset 0 0 6px #ff0066,
+          0 0 16px #0ff;
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-align: center;
+      }
+      nav.home-nav a:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          inset 0 0 12px #ff0066,
+          0 0 24px #0ff;
+      }
+
+      /* keyframes */
+      @keyframes gradientAnim {
+        0%   { background-position:   0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position:   0% 50%; }
+      }
+
+  body.home-background
+    .container
+      h1.main-title WorldGuessr
+    nav.home-nav
+      ul
+        li
+          a(href='/games') Games
+        li
+          a(href='/create') Create
+        li
+          a(href='/settings') Settings
+        li
+          a(href='/leaderboard') LeaderBoard
+        li
+          a(href='/about') About
+        li
+          a(href='/logout') Logout
+>>>>>>> 6bbff4d7061e421cffba9ac51e23d26d480bb3f9
